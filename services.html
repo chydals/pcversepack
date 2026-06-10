@@ -151,18 +151,19 @@
 <body>
 
 <header>
-  <div class="logo">Pockverse</div>
+  <a href="index.html" class="logo">Pockverse</a>
   <nav>
-    <a href="#"><span>About Us</span> 關於我們</a>
-    <a href="#"><span>Products & Services</span> 產品服務</a>
-    <a href="#"><span>Designer Marketplace</span> 設計師媒合</a>
-    <a href="#"><span>Cart & Checkout</span> 購物車 & 結帳</a>
-    <a href="#"><span>My Account</span> 會員中心</a>
+    <a href="about.html"><span>About Us</span> 關於我們</a>
+    <a href="services.html"><span>Products & Services</span> 產品服務</a>
+    <a href="designer-marketplace.html"><span>Designer Marketplace</span> 設計師媒合</a>
+    <a href="cart.html"><span>Cart & Checkout</span> 購物車 & 結帳</a>
+    <a href="account.html"><span>My Account</span> 會員中心</a>
   </nav>
 </header>
 
 <div class="main-container">
 
+  <!-- Toolbar -->
   <div class="toolbar">
     <button title="Library"><i class="fas fa-book"></i></button>
     <button title="Saved Projects"><i class="fas fa-save"></i></button>
@@ -173,7 +174,9 @@
     <button title="Download AI"><i class="fas fa-file-code"></i></button>
   </div>
 
+  <!-- Viewers Container -->
   <div class="viewers">
+    <!-- Interactive Viewport Canvas -->
     <div class="viewer-3d" id="viewer3d">
       <div class="viewer-instruction">
         <i class="fas fa-mouse"></i> Left Click + Drag: Orbit | Right Click + Drag: Pan | Scroll: Zoom
@@ -193,13 +196,16 @@
       </div>
     </div>
     
+    <!-- Aligned 2D Dieline Template Viewport -->
     <div class="viewer-2d">
       <svg class="dieline-svg" id="dielineSvg" viewBox="0 0 700 320"></svg>
     </div>
   </div>
 
+  <!-- Options Panel -->
   <div class="options-panel">
 
+    <!-- Basic Settings -->
     <div class="section">
       <div class="section-title">Basic Settings</div>
       <div class="option-group">
@@ -224,6 +230,7 @@
       <small>Thickness refers to paper material thickness.</small>
     </div>
 
+    <!-- Materials -->
     <div class="section">
       <div class="section-title">Materials</div>
       <select id="material-select">
@@ -242,6 +249,7 @@
       </div>
     </div>
 
+    <!-- Printing -->
     <div class="accordion">Printing Options <i class="fas fa-chevron-down"></i></div>
     <div class="panel">
       <div class="option-group">
@@ -253,6 +261,7 @@
       <input type="text" placeholder="Pantone / Spot Color Number (if applicable)">
     </div>
 
+    <!-- Finishing -->
     <div class="accordion">Finishing Options <i class="fas fa-chevron-down"></i></div>
     <div class="panel">
       <div class="option-group">
@@ -263,6 +272,7 @@
       </div>
     </div>
 
+    <!-- Surface -->
     <div class="accordion">Surface Options <i class="fas fa-chevron-down"></i></div>
     <div class="panel">
       <div class="option-group">
@@ -274,6 +284,7 @@
       </div>
     </div>
 
+    <!-- Accessories -->
     <div class="accordion">Accessories <i class="fas fa-chevron-down"></i></div>
     <div class="panel">
       <div class="option-group">
@@ -288,6 +299,7 @@
       <textarea placeholder="Write your accessories here..."></textarea>
     </div>
 
+    <!-- Transportation -->
     <div class="accordion">Transportation & Delivery <i class="fas fa-chevron-down"></i></div>
     <div class="panel">
       <div class="section-title">Method of Delivery</div>
@@ -304,6 +316,7 @@
       </div>
     </div>
 
+    <!-- Pricing -->
     <div class="section">
       <div class="section-title">Quantity & Pricing</div>
       <input type="number" id="orderQuantityInput" value="1000" placeholder="Quantity (No MOQ)">
@@ -327,11 +340,13 @@
       </table>
     </div>
 
+    <!-- Remarks -->
     <div class="section">
       <div class="section-title">Remarks / Additional Notes</div>
       <textarea placeholder="Write any remarks or details about your project..."></textarea>
     </div>
 
+    <!-- Action Buttons Array Hierarchy -->
     <div class="action-buttons-container">
       <div class="primary-actions">
         <button class="action-btn">Hire a Designer</button>
@@ -348,6 +363,7 @@
   </div>
 </div>
 
+<!-- Chat Component -->
 <button class="chat-btn"><i class="fas fa-comment-dots"></i></button>
 <div class="chat-window">
   <div class="chat-header">Customer Service</div>
@@ -481,41 +497,52 @@
 
     // 1. RE-ARCHITECT 3D TRANSFORM NODE LINK SYSTEM
     box3dRoot.innerHTML = `
+      <!-- Panel 1: Left Anchor Base -->
       <div class="node-3d panel-left" data-face="left" style="width:${W}px; height:${H}px; left:${-(W+L)}px; top:${-H/2}px;">
         Left
         
+        <!-- Glue Joint Tab Side Flap -->
         <div class="node-3d glue-tab" data-face="glue-tab" style="width:15px; height:${H}px; left:-15px; top:-1.5px; transform-origin: right center; transform: rotateY(${-innerAngle}deg);">
           Glue
         </div>
 
+        <!-- Left Bottom Flap B -->
         <div class="node-3d bottom-flap" data-face="b-flap-2" style="width:${W}px; height:${W}px; left:-1.5px; top:${H}px; transform-origin: center top; transform: rotateX(${-innerAngle}deg) rotateY(${innerAngle*0.5}deg);">
           Bottom B
         </div>
 
+        <!-- Panel 2: Rear Wall Component Link -->
         <div class="node-3d panel-rear" data-face="rear" style="width:${L}px; height:${H}px; left:${W}px; top:-1.5px; transform-origin: left center; transform: rotateY(${innerAngle}deg);">
           Rear
 
+          <!-- Top Closure Main Lid Panel Component -->
           <div class="node-3d panel-top" data-face="lid-main" style="width:${L}px; height:${W}px; left:-1.5px; top:${-W}px; transform-origin: center bottom; transform: rotateX(${innerAngle}deg);">
             Top Lid
+            <!-- Top Tuck Flap Insertion Edge -->
             <div class="node-3d panel-tuck" data-face="tuck-flap" style="width:${L}px; height:20px; left:-1.5px; top:-20px; transform-origin: center bottom; transform: rotateX(${innerAngle}deg);">
               Tuck Flap
             </div>
           </div>
 
+          <!-- Rear Bottom Base Interlock Flap A -->
           <div class="node-3d bottom-flap" data-face="b-flap-1" style="width:${L}px; height:${W}px; left:-1.5px; top:${H}px; transform-origin: center top; transform: rotateX(${-innerAngle}deg);">
             Bottom A
           </div>
 
+          <!-- Panel 3: Right Wall Component Link -->
           <div class="node-3d panel-right" data-face="right" style="width:${W}px; height:${H}px; left:${L}px; top:-1.5px; transform-origin: left center; transform: rotateY(${innerAngle}deg);">
             Right
 
+            <!-- Right Bottom Base Interlock Flap D -->
             <div class="node-3d bottom-flap" data-face="b-flap-4" style="width:${W}px; height:${W}px; left:-1.5px; top:${H}px; transform-origin: center top; transform: rotateX(${-innerAngle}deg) rotateY(${-innerAngle*0.5}deg);">
               Bottom D
             </div>
 
+            <!-- Panel 4: Front Wall Component Link with snap offset alignment -->
             <div class="node-3d panel-front" data-face="front" style="width:${L}px; height:${H}px; left:${W - snapCompensation}px; top:-1.5px; transform-origin: left center; transform: rotateY(${innerAngle}deg);">
               Front
 
+              <!-- Front Bottom Interlock Flap C -->
               <div class="node-3d bottom-flap" data-face="b-flap-3" style="width:${L}px; height:${W}px; left:-1.5px; top:${H}px; transform-origin: center top; transform: rotateX(${-innerAngle}deg);">
                 Bottom C
               </div>
@@ -545,24 +572,30 @@
 
     dielineSvg.innerHTML = `
       <g transform="translate(15, 10)">
+        <!-- Glue Joint flap -->
         <path d="M ${xGlue} ${yBase} L ${xLeft} ${yBase} L ${xLeft} ${yBottom} L ${xGlue} ${yBottom-10} Z" class="dieline-face glue" data-face="glue-tab"/>
         
+        <!-- Standardized Wall Facets -->
         <rect x="${xLeft}" y="${yBase}" width="${W}" height="${H}" class="dieline-face" data-face="left" />
         <rect x="${xRear}" y="${yBase}" width="${L}" height="${H}" class="dieline-face" data-face="rear" />
         <rect x="${xRight}" y="${yBase}" width="${W}" height="${H}" class="dieline-face" data-face="right" />
         <rect x="${xFront}" y="${yBase}" width="${L}" height="${H}" class="dieline-face" data-face="front" />
 
+        <!-- Top Closure Components -->
         <rect x="${xRear}" y="${yTopLid}" width="${L}" height="${W}" class="dieline-face" data-face="lid-main" />
         <path d="M ${xRear} ${yTopLid} L ${xRear+10} ${yTuck} L ${xRear+L-10} ${yTuck} L ${xRear+L} ${yTopLid} Z" class="dieline-face" data-face="tuck-flap" />
         
+        <!-- Top Dust Flaps Components -->
         <path d="M ${xLeft} ${yBase} L ${xLeft} ${yTopLid+10} Q ${xLeft+W/2} ${yTopLid} ${xLeft+W} ${yTopLid+15} L ${xLeft+W} ${yBase} Z" fill="#f0f7ff" stroke="#0b2545"/>
         <path d="M ${xRight} ${yBase} L ${xRight} ${yTopLid+15} Q ${xRight+W/2} ${yTopLid} ${xRight+W} ${yTopLid+10} L ${xRight+W} ${yBase} Z" fill="#f0f7ff" stroke="#0b2545"/>
 
+        <!-- Industrial Auto-Lock Bottom Structural Geometry Profiles -->
         <path d="M ${xLeft} ${yBottom} L ${xLeft+W} ${yBottom} L ${xLeft+W} ${yBottom+W-10} L ${xLeft+W/2} ${yBottom+W/2} L ${xLeft} ${yBottom+15} Z" class="dieline-face" data-face="b-flap-2" />
         <path d="M ${xRear} ${yBottom} L ${xRear+L} ${yBottom} L ${xRear+L} ${yBottom+W-15} L ${xRear+L/2} ${yFlapMax} L ${xRear} ${yBottom+W-15} Z" class="dieline-face" data-face="b-flap-1" />
         <path d="M ${xRight} ${yBottom} L ${xRight+W} ${yBottom} L ${xRight+W} ${yBottom+15} L ${xRight+W/2} ${yBottom+W/2} L ${xRight} ${yBottom+W-10} Z" class="dieline-face" data-face="b-flap-4" />
         <path d="M ${xFront} ${yBottom} L ${xFront+L} ${yBottom} L ${xFront+L} ${yBottom+W-15} L ${xFront+L/2} ${yFlapMax} L ${xFront} ${yBottom+W-15} Z" class="dieline-face" data-face="b-flap-3" />
 
+        <!-- Perimeter Fold Line Overlay Markers -->
         <line x1="${xLeft}" y1="${yBase}" x2="${xEnd}" y2="${yBase}" class="fold-line" />
         <line x1="${xLeft}" y1="${yBottom}" x2="${xEnd}" y2="${yBottom}" class="fold-line" />
         <line x1="${xLeft}" y1="${yBase}" x2="${xLeft}" y2="${yBottom}" class="fold-line" />
@@ -571,9 +604,11 @@
         <line x1="${xFront}" y1="${yBase}" x2="${xFront}" y2="${yBottom}" class="fold-line" />
         <line x1="${xEnd}" y1="${yBase}" x2="${xEnd}" y2="${yBottom}" class="fold-line" />
         
+        <!-- Bottom Internal Support Stress Folds -->
         <line x1="${xLeft+W}" y1="${yBottom}" x2="${xLeft+W/2}" y2="${yBottom+W/2}" class="fold-line" />
         <line x1="${xRight}" y1="${yBottom}" x2="${xRight+W/2}" y2="${yBottom+W/2}" class="fold-line" />
 
+        <!-- Structural Content Labels text mappings -->
         <text x="${xLeft+W/2}" y="${yBase+H/2}" font-size="11" font-weight="bold" text-anchor="middle" fill="#0b2545" pointer-events="none">Left</text>
         <text x="${xRear+L/2}" y="${yBase+H/2}" font-size="11" font-weight="bold" text-anchor="middle" fill="#0b2545" pointer-events="none">Rear</text>
         <text x="${xRight+W/2}" y="${yBase+H/2}" font-size="11" font-weight="bold" text-anchor="middle" fill="#0b2545" pointer-events="none">Right</text>
