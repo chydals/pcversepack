@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pockverse - Beyond Packages, Into Connections</title>
+  <meta name="description" content="Pockverse provides customizable packaging solutions with connections to clients and designers. Explore, filter, and order your packaging online.">
+  <meta name="keywords" content="custom packaging, packaging templates, boxes, bags, retail, cosmetics, eco-friendly, designer packaging">
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body { margin:0; font-family:'Roboto',sans-serif; background-color:#f5f6fa; color:#1a1a1a; }
+    a { text-decoration:none; color:inherit; }
+
+    /* Header */
+    header { display:flex; justify-content:space-between; align-items:center; padding:20px 50px; background-color:#0b2545; color:#fff; position:sticky; top:0; z-index:1000; }
+    .logo { font-size:28px; font-weight:700; color:#00aaff; }
+    .logo a { color:#00aaff; text-decoration:none; }
+    nav { display:flex; gap:25px; }
+    nav a { display:flex; flex-direction:column; align-items:center; font-weight:500; color:#fff; font-size:16px; position:relative; padding:5px 0; transition: all 0.2s; }
+    nav a span { font-size:12px; color:#ccc; margin-top:2px; }
+    
+    /* Subtle underline indicating current page */
+    nav a.active::after, nav a:hover::after { content:""; position:absolute; bottom:0; left:0; width:100%; height:2px; background:#00aaff; }
+
+    main { padding:40px 50px; }
+
+    /* Hero */
+    .hero { display:flex; justify-content:space-between; align-items:center; padding-bottom:60px; gap:40px; flex-wrap:wrap; }
+    .hero-text { max-width:65%; }
+    .hero-text h1 { font-size:46px; margin-bottom:20px; color:#0b2545; }
+    .hero-text p { font-size:18px; margin-bottom:20px; color:#444; }
+    .search-wrapper { position:relative; width:100%; max-width:500px; }
+    .search { width:100%; padding:14px 45px 14px 20px; font-size:16px; border-radius:12px; border:2px solid #0b2545; outline:none; }
+    .search-wrapper i { position:absolute; right:15px; top:50%; transform:translateY(-50%); color:#888; font-size:18px; }
+    .video-placeholder { flex-shrink:0; width:25%; min-width:250px; height:300px; background-color:#a6d8ff; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:18px; color:#fff; font-weight:600; box-shadow:0 6px 18px rgba(0,0,0,0.12); }
+
+    /* Filters */
+    .filter-section { display:flex; align-items:center; gap:15px; margin:30px 0; flex-wrap:wrap; }
+    .filter-button { background:#0b2545; color:#fff; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; font-weight:500; transition: background 0.2s; }
+    .filter-button:hover { background:#005f99; }
+
+    /* Clear Filters Special Style */
+    #clear-filters {
+      background: transparent;
+      color: #666;
+      border: 1px dashed #aaa;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    #clear-filters:hover {
+      color: #333;
+      border-color: #666;
+      background-color: #f0f0f0;
+    }
+
+    /* Tags */
+    .tags { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:40px; }
+    .tag { background:#00aaff; color:#fff; padding:8px 18px; border-radius:25px; font-size:14px; cursor:pointer; transition:all 0.2s; }
+    .tag:hover { background:#0077cc; }
+
+    /* Product Grid */
+    .product-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:20px; margin-bottom:60px; }
+    @media(max-width:768px){ .product-grid{grid-template-columns:1fr;} }
+    .product-box { background:#fff; border-radius:16px; height:180px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:14px; color:#333; box-shadow:0 4px 12px rgba(0,0,0,0.08); cursor:pointer; text-align:center; padding:15px; transition: transform 0.2s, box-shadow 0.2s; }
+    .product-box:hover { transform: translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,0.15); }
+
+    /* Signup */
+    .signup { text-align:center; padding-bottom:60px; }
+    .signup button { padding:16px 36px; font-size:16px; background:#0b2545; color:#fff; border:none; border-radius:12px; cursor:pointer; transition:background 0.2s, transform 0.2s; }
+    .signup button:hover { background:#005f99; transform:translateY(-2px); }
+
+    /* Carousel */
+    .carousel-wrapper { overflow:hidden; padding:40px 0; border-top:1px solid #ddd; border-bottom:1px solid #ddd; background-color:#f0f4f8; }
+    .carousel-track {
+      display:flex;
+      gap:20px;
+      width:max-content;
+      animation:scroll 40s linear infinite;
+    }
+    .carousel-item { flex:0 0 auto; width:140px; text-align:center; }
+    .carousel-item .box { width:140px; height:100px; background-color:#a6d8ff; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:600; color:#000; margin-bottom:10px; }
+    .carousel-item span { display:block; font-size:14px; color:#333; }
+
+    /* Continuous Loop Animation */
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-33.33%); }
+    }
+
+    /* Footer */
+    footer { background:#0b2545; color:#fff; padding:60px 50px 20px; }
+    .footer-logo { font-size:26px; font-weight:700; color:#00aaff; margin-bottom:20px; }
+    .footer-columns { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:30px; margin-bottom:30px; }
+    .footer-column h4 { margin-bottom:15px; font-size:16px; color:#00aaff; }
+    .footer-social { display:flex; gap:15px; margin-bottom:20px; }
+    .footer-social a { display:flex; align-items:center; justify-content:center; width:35px; height:35px; background:#005f99; border-radius:50%; color:#fff; font-size:16px; }
+    .footer-bottom { border-top:1px solid #005f99; padding-top:20px; font-size:13px; display:flex; justify-content:space-between; flex-wrap:wrap; color:#aaa; }
+    .footer-bottom a { color:#aaa; margin-left:15px; transition: color 0.2s; }
+    .footer-bottom a:hover{color:#fff;}
+  </style>
+</head>
+<body>
+
+<header>
+  <!-- Logo now properly wraps in an anchor tag pointing back to the homepage -->
+  <div class="logo"><a href="index.html">Pockverse</a></div>
+  <nav aria-label="Main Navigation">
+    <a href="about.html">About Us<span>關於我們</span></a>
+    <a href="services.html">Products & Services<span>產品服務</span></a>
+    <a href="designer-marketplace.html">Designer Marketplace<span>設計師媒合</span></a>
+    <a href="cart.html">Cart & Checkout<span>購物車 & 結帳</span></a>
+    <a href="account.html">My Account<span>會員中心</span></a>
+  </nav>
+</header>
+
+<main>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-text">
+      <h1 id="hero-title">Beyond Packages, Into Connections</h1>
+      <p>Discover innovative packaging solutions and connect with your clients and designers seamlessly.</p>
+      <div class="search-wrapper">
+        <input class="search" type="search" placeholder="Search for packaging..." aria-label="Search packaging">
+        <i class="fas fa-magnifying-glass"></i>
+      </div>
+    </div>
+    <div class="video-placeholder" role="img" aria-label="Video showcasing Pockverse services">Video Placeholder</div>
+  </section>
+
+  <!-- Filters -->
+  <section class="filter-section" aria-label="Filters">
+    <button class="filter-button">Filter by Shape</button>
+    <button class="filter-button">Filter by Industry</button>
+    <button class="filter-button">Filter by Use</button>
+    <button class="filter-button">Filter by Most Popular</button>
+    <button class="filter-button" id="clear-filters"><i class="fas fa-times"></i> Clear Filters</button>
+  </section>
+
+  <!-- Tags -->
+  <section class="tags" aria-label="Popular Tags"></section>
+
+  <!-- Product Grid -->
+  <section id="services-grid" class="product-grid" aria-label="Products & Services"></section>
+
+  <!-- Signup -->
+  <section class="signup">
+    <button aria-label="Sign up to explore more">Sign up to explore</button>
+  </section>
+
+  <!-- Carousel -->
+  <section class="carousel-wrapper" aria-label="Popular Categories">
+    <div class="carousel-track">
+      <!-- Tripled items for seamless continuous scroll -->
+      <div class="carousel-item"><div class="box">Foldable</div><span>Foldable Boxes</span></div>
+      <div class="carousel-item"><div class="box">Paper Bag</div><span>Paper Bags</span></div>
+      <div class="carousel-item"><div class="box">Envelope</div><span>Envelopes</span></div>
+      <div class="carousel-item"><div class="box">Gift</div><span>Gift Packaging</span></div>
+      <div class="carousel-item"><div class="box">E-Commerce</div><span>E-Commerce Boxes</span></div>
+
+      <div class="carousel-item"><div class="box">Foldable</div><span>Foldable Boxes</span></div>
+      <div class="carousel-item"><div class="box">Paper Bag</div><span>Paper Bags</span></div>
+      <div class="carousel-item"><div class="box">Envelope</div><span>Envelopes</span></div>
+      <div class="carousel-item"><div class="box">Gift</div><span>Gift Packaging</span></div>
+      <div class="carousel-item"><div class="box">E-Commerce</div><span>E-Commerce Boxes</span></div>
+
+      <div class="carousel-item"><div class="box">Foldable</div><span>Foldable Boxes</span></div>
+      <div class="carousel-item"><div class="box">Paper Bag</div><span>Paper Bags</span></div>
+      <div class="carousel-item"><div class="box">Envelope</div><span>Envelopes</span></div>
+      <div class="carousel-item"><div class="box">Gift</div><span>Gift Packaging</span></div>
+      <div class="carousel-item"><div class="box">E-Commerce</div><span>E-Commerce Boxes</span></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-logo">Pockverse</div>
+  <div class="footer-columns">
+    <div class="footer-column">
+      <h4>Social</h4>
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div>&copy; 2026 Pockverse</div>
+    <div>
+      <a href="#">Terms</a>
+      <a href="#">Privacy</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const products = [
+    { name: "Square Box", type: "Shape", hashtag: "#Square", likes: 120 },
+    { name: "Circular Box", type: "Shape", hashtag: "#Circular", likes: 95 },
+    { name: "Rectangular Box", type: "Shape", hashtag: "#Rectangular", likes: 140 },
+    { name: "Special Shape", type: "Shape", hashtag: "#SpecialShape", likes: 80 },
+    { name: "Retail Packaging", type: "Industry", hashtag: "#Retail", likes: 210 },
+    { name: "Cosmetics Packaging", type: "Industry", hashtag: "#Cosmetics", likes: 180 },
+    { name: "Food Packaging", type: "Industry", hashtag: "#Food", likes: 200 },
+    { name: "Technology Packaging", type: "Industry", hashtag: "#Technology", likes: 150 },
+    { name: "Gift Box", type: "Use", hashtag: "#Gift", likes: 300 },
+    { name: "Stationery Box", type: "Use", hashtag: "#Stationery", likes: 150 },
+    { name: "Storage Box", type: "Use", hashtag: "#Storage", likes: 120 },
+    { name: "Shipping Box", type: "Use", hashtag: "#Shipping", likes: 180 },
+    { name: "E-Commerce Box", type: "Most Popular", hashtag: "#ECommerce", likes: 400 },
+    { name: "Foldable Box", type: "Most Popular", hashtag: "#Foldable", likes: 350 },
+    { name: "Clamshell Box", type: "Most Popular", hashtag: "#Clamshell", likes: 320 },
+    { name: "Gift Box", type: "Most Popular", hashtag: "#GiftBox", likes: 280 },
+    { name: "Luxury Box", type: "Most Popular", hashtag: "#LuxuryBox", likes: 260 },
+    { name: "Paper Bag", type: "Most Popular", hashtag: "#PaperBag", likes: 220 },
+    { name: "Envelope", type: "Most Popular", hashtag: "#Envelope", likes: 210 },
+    { name: "Custom Box", type: "Most Popular", hashtag: "#CustomBox", likes: 200 },
+  ];
+
+  const filterButtons = document.querySelectorAll(".filter-button");
+  const tagsContainer = document.querySelector(".tags");
+  const productGrid = document.querySelector(".product-grid");
+  const searchInput = document.querySelector(".search");
+  const clearBtn = document.getElementById("clear-filters");
+
+  function renderGrid(filteredProducts) {
+    productGrid.innerHTML = "";
+    filteredProducts.forEach(p => {
+      const box = document.createElement("div");
+      box.className = "product-box";
+      box.innerHTML = `<div>${p.name}</div><div style="font-size:12px;color:#888;margin-top:5px;">❤️ ${p.likes} Likes</div>`;
+      productGrid.appendChild(box);
+    });
+  }
+
+  function renderTags(filteredProducts) {
+    tagsContainer.innerHTML = "";
+    const uniqueTags = [...new Set(filteredProducts.map(p => p.hashtag))];
+    uniqueTags.forEach(tag => {
+      const tagDiv = document.createElement("div");
+      tagDiv.className = "tag";
+      tagDiv.textContent = tag;
+      tagDiv.addEventListener("click", () => {
+        renderGrid(products.filter(p => p.hashtag === tag));
+      });
+      tagsContainer.appendChild(tagDiv);
+    });
+  }
+
+  filterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const filterType = btn.textContent.split(" by ")[1];
+      if (filterType) {
+        const filtered = products.filter(p => p.type === filterType);
+        renderGrid(filtered);
+        renderTags(filtered);
+      }
+    });
+  });
+
+  clearBtn.addEventListener("click", () => {
+    renderGrid(products);
+    renderTags(products);
+    searchInput.value = "";
+  });
+
+  searchInput.addEventListener("input", (e) => {
+    const term = e.target.value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+    renderGrid(filtered);
+    renderTags(filtered);
+  });
+
+  renderGrid(products);
+  renderTags(products);
+</script>
+</body>
+</html>

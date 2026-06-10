@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pockverse - Products & Services Customization</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { margin:0; font-family:'Roboto', sans-serif; background-color:#f5f6fa; color:#1a1a1a; }
+    a { text-decoration:none; color:inherit; }
+
+    /* Header */
+    header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background-color:#0b2545; color:#fff; position:sticky; top:0; z-index:1000; }
+    .logo { font-size:28px; font-weight:700; color:#00aaff; }
+    nav { display:flex; gap:25px; }
+    nav a { font-size:16px; font-weight:500; color:#fff; display:flex; flex-direction:column; text-align:center; }
+    nav a span { font-size:12px; color:#ccc; }
+
+    /* Main Layout */
+    .main-container { display:flex; gap:20px; padding:30px 40px; }
+
+    /* Toolbar */
+    .toolbar { width:60px; display:flex; flex-direction:column; gap:20px; align-items:center; }
+    .toolbar button { width:50px; height:50px; background:#0b2545; border:none; border-radius:10px; color:#fff; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.2s; }
+    .toolbar button:hover { background:#005f99; }
+
+    /* Viewers */
+    .viewers { flex:2; display:flex; flex-direction:column; gap:20px; align-items:center; }
+    .viewer-3d { width:100%; height:500px; background-color:#e0f7ff; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:600; color:#0b2545; }
+    .viewer-2d { width:100%; height:200px; background-color:#fff; border:1px solid #ddd; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:18px; color:#0b2545; }
+
+    /* Options & Pricing */
+    .options-panel { flex:1; background:#fff; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:15px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    .section-title { font-weight:600; color:#0b2545; margin-bottom:10px; }
+    .option-group { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px; }
+    .option-button { padding:8px 12px; border-radius:8px; border:1px solid #ccc; background:#f5f5f5; cursor:pointer; font-size:14px; transition:0.2s; display:flex; align-items:center; gap:5px; }
+    .option-button.active, .option-button:hover { background:#0b2545; color:#fff; border-color:#0b2545; }
+
+    input[type="number"], input[type="text"], textarea, select { width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; margin-bottom:10px; font-size:14px; box-sizing:border-box; }
+    textarea { resize:vertical; min-height:60px; }
+
+    /* Pricing Table */
+    .pricing-summary { display:flex; justify-content:space-between; background:#f5f5f5; padding:12px; border-radius:8px; font-weight:600; margin-bottom:10px; }
+    .pricing-table { width:100%; border-collapse:separate; border-spacing:0; font-size:14px; margin-top:10px; }
+    .pricing-table th { background:#0b5ed7; color:white; padding:10px; text-align:center; border-radius:5px 5px 0 0; }
+    .pricing-table td { padding:10px; text-align:center; border-bottom:1px solid #ccc; }
+    .pricing-table tbody tr:nth-child(even) { background:#f0f8ff; }
+    .pricing-table tbody tr.highlight { background:#e6f0ff; font-weight:bold; }
+
+    /* Accordion */
+    .accordion { background:#e0f0ff; border-radius:8px; cursor:pointer; padding:10px 15px; font-weight:500; border:1px solid #ccc; display:flex; justify-content:space-between; align-items:center; color:#0b5ed7; }
+    .accordion:hover { background:#d0e6ff; }
+    .panel { display:none; flex-direction:column; padding:10px 0 0 0; }
+
+    /* Material Preview */
+    .material-preview { margin-top:10px; text-align:center; }
+    .material-preview img { width:80px; height:80px; border-radius:50%; border:2px solid #0b5ed7; object-fit:cover; margin-bottom:5px; display:none; }
+
+    /* Chat */
+    .chat-btn { position:fixed; bottom:20px; left:20px; background:#00aaff; color:#fff; border:none; border-radius:50%; width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:28px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:1001; }
+    .chat-window { display:none; position:fixed; bottom:90px; left:20px; width:300px; height:350px; background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.3); display:flex; flex-direction:column; overflow:hidden; z-index:1002; }
+    .chat-header { background:#0b2545; color:#fff; padding:10px; font-weight:600; }
+    .chat-messages { flex:1; padding:10px; overflow-y:auto; font-size:14px; }
+    .chat-input { display:flex; border-top:1px solid #ccc; }
+    .chat-input textarea { flex:1; border:none; padding:10px; resize:none; font-size:14px; }
+    .chat-input button { background:#00aaff; color:#fff; border:none; padding:0 20px; cursor:pointer; }
+
+    /* Action Buttons */
+    .action-buttons-container { display:flex; flex-direction:column; gap:10px; margin-top:15px; }
+    .primary-actions, .secondary-actions { display:flex; flex-wrap:wrap; gap:10px; }
+    .action-btn { flex:1 1 30%; padding:14px 20px; font-size:16px; border-radius:10px; border:none; cursor:pointer; background:#f0f0f0; color:#0b2545; font-weight:600; transition:0.2s; text-align:center; }
+    .action-btn:hover { background:#0b5ed7; color:white; }
+    .action-btn.primary { background:#0b5ed7; color:white; }
+    .action-btn.primary:hover { background:#0846a3; }
+
+    /* Footer */
+    footer { margin-top:30px; background:#0b2545; color:#fff; padding:20px 40px; text-align:center; font-size:14px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Pockverse</div>
+  <nav>
+    <a href="#"><span>About Us</span> 關於我們</a>
+    <a href="#"><span>Products & Services</span> 產品服務</a>
+    <a href="#"><span>Designer Marketplace</span> 設計師媒合</a>
+    <a href="#"><span>Cart & Checkout</span> 購物⾞ & 結帳</a>
+    <a href="#"><span>My Account</span> 會員中⼼</a>
+  </nav>
+</header>
+
+<div class="main-container">
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <button title="Library"><i class="fas fa-book"></i></button>
+    <button title="Saved Projects"><i class="fas fa-save"></i></button>
+    <button title="Basic Settings"><i class="fas fa-cog"></i></button>
+    <button title="Advanced Settings"><i class="fas fa-sliders-h"></i></button>
+    <button title="Download PDF"><i class="fas fa-file-pdf"></i></button>
+    <button title="Download JPG"><i class="fas fa-image"></i></button>
+    <button title="Download AI"><i class="fas fa-file-code"></i></button>
+  </div>
+
+  <!-- Viewers -->
+  <div class="viewers">
+    <div class="viewer-3d">3D Viewer (80x80x80mm Sample Box)</div>
+    <div class="viewer-2d">2D Template Viewer (Sample Box)</div>
+  </div>
+
+  <!-- Options Panel -->
+  <div class="options-panel">
+
+    <!-- Basic Settings -->
+    <div class="section">
+      <div class="section-title">Basic Settings</div>
+      <div class="option-group">
+        <input type="number" placeholder="Length">
+        <input type="number" placeholder="Width">
+        <input type="number" placeholder="Height">
+        <select>
+          <option>mm</option>
+          <option>cm</option>
+          <option>inches</option>
+        </select>
+      </div>
+      <div class="option-group">
+        <div class="option-button" title="Inside usable space">Inner Dimensions</div>
+        <div class="option-button" title="External size of product">Outer Dimensions</div>
+      </div>
+      <p style="font-size:12px; color:#555;">
+        • Inner Dimensions: Internal usable space inside the packaging.<br>
+        • Outer Dimensions: Overall outside size including thickness.
+      </p>
+      <input type="number" placeholder="Thickness (0.2 - 5 mm)">
+      <small>Thickness refers to paper material thickness.</small>
+    </div>
+
+    <!-- Materials -->
+    <div class="section">
+      <div class="section-title">Materials</div>
+      <select id="material-select">
+        <option value="">Select a material</option>
+        <option value="Corrugated">Corrugated Fiberboard</option>
+        <option value="White-card">White Card Paper</option>
+        <option value="White-cardboard">White Cardboard Paper</option>
+        <option value="Kraft">Kraft Paper</option>
+        <option value="Coated">Coated Paper</option>
+        <option value="Uncoated">Uncoated Paper</option>
+        <option value="FSC">FSC Certified Paper</option>
+      </select>
+      <div class="material-preview">
+        <img id="material-image" src="" alt="">
+        <p id="material-description"></p>
+      </div>
+    </div>
+
+    <!-- Printing -->
+    <div class="accordion">Printing Options <i class="fas fa-chevron-down"></i></div>
+    <div class="panel">
+      <div class="option-group">
+        <div class="option-button"><i class="fas fa-palette"></i> CMYK</div>
+        <div class="option-button"><i class="fas fa-tint"></i> Spot Color</div>
+        <div class="option-button"><i class="fas fa-palette"></i><i class="fas fa-tint"></i> CMYK + Spot</div>
+        <div class="option-button"><i class="far fa-square"></i> No Color (White)</div>
+      </div>
+      <input type="text" placeholder="Pantone / Spot Color Number (if applicable)">
+    </div>
+
+    <!-- Finishing -->
+    <div class="accordion">Finishing Options <i class="fas fa-chevron-down"></i></div>
+    <div class="panel">
+      <div class="option-group">
+        <div class="option-button"><i class="fas fa-certificate"></i> Embossing</div>
+        <div class="option-button"><i class="fas fa-minus-square"></i> Debossing</div>
+        <div class="option-button"><i class="fas fa-fire"></i> Hot Stamping</div>
+        <div class="option-button"><i class="fas fa-star"></i> Spot UV</div>
+      </div>
+    </div>
+
+    <!-- Surface -->
+    <div class="accordion">Surface Options <i class="fas fa-chevron-down"></i></div>
+    <div class="panel">
+      <div class="option-group">
+        <div class="option-button"><i class="fas fa-square"></i> Matte</div>
+        <div class="option-button"><i class="fas fa-square-full"></i> Glossy</div>
+        <div class="option-button"><i class="fas fa-layer-group"></i> Coated</div>
+        <div class="option-button"><i class="far fa-square"></i> Uncoated</div>
+        <div class="option-button"><i class="fas fa-tint"></i> Waterproof</div>
+      </div>
+    </div>
+
+    <!-- Accessories -->
+    <div class="accordion">Accessories <i class="fas fa-chevron-down"></i></div>
+    <div class="panel">
+      <div class="option-group">
+        <div class="option-button"><i class="fas fa-magnet"></i> Magnetics</div>
+        <div class="option-button"><i class="fas fa-ribbon"></i> Satin Ribbons</div>
+        <div class="option-button"><i class="fas fa-hand-paper"></i> Special Handles</div>
+        <div class="option-button"><i class="fas fa-sticky-note"></i> Stickers</div>
+        <div class="option-button"><i class="fas fa-tag"></i> Labels</div>
+        <div class="option-button"><i class="fas fa-gift"></i> Wrapping Paper</div>
+        <div class="option-button"><i class="fas fa-ellipsis-h"></i> Others</div>
+      </div>
+      <textarea placeholder="Write your accessories here..."></textarea>
+    </div>
+
+    <!-- Transportation -->
+    <div class="accordion">Transportation & Delivery <i class="fas fa-chevron-down"></i></div>
+    <div class="panel">
+      <div class="section-title">Method of Delivery</div>
+      <div class="option-group">
+        <div class="option-button"><i class="fas fa-truck"></i> Truck</div>
+        <div class="option-button"><i class="fas fa-plane"></i> Air Freight</div>
+        <div class="option-button"><i class="fas fa-ship"></i> Sea Freight</div>
+      </div>
+      <div class="section-title">Service Level</div>
+      <div class="option-group">
+        <div class="option-button">Standard (1–2 weeks)</div>
+        <div class="option-button">Expedited (5–7 days)</div>
+        <div class="option-button">Urgent (1–3 days)</div>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="section">
+      <div class="section-title">Quantity & Pricing</div>
+      <input type="number" placeholder="Quantity (No MOQ)">
+      <div class="pricing-summary">
+        <div>Unit Price: $<span>0.00</span></div>
+        <div>Total Price: $<span>0.00</span></div>
+      </div>
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>100</td><td>$1.50</td><td>$150</td></tr>
+          <tr><td>500</td><td>$1.30</td><td>$650</td></tr>
+          <tr class="highlight"><td>1000</td><td>$1.10</td><td>$1100</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Remarks -->
+    <div class="section">
+      <div class="section-title">Remarks / Additional Notes</div>
+      <textarea placeholder="Write any remarks or details about your project..."></textarea>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons-container">
+      <div class="primary-actions">
+        <button class="action-btn">Hire a Designer</button>
+        <button class="action-btn">Upload Your Design</button>
+        <button class="action-btn">Download Template</button>
+      </div>
+      <div class="secondary-actions">
+        <button class="action-btn">Save Project</button>
+        <button class="action-btn">Edit Later</button>
+        <button class="action-btn primary">Place Order</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Chat -->
+<button class="chat-btn"><i class="fas fa-comment-dots"></i></button>
+<div class="chat-window">
+  <div class="chat-header">Customer Service</div>
+  <div class="chat-messages">
+    <p><strong>Support:</strong> Hello! How can we assist you today?</p>
+  </div>
+  <div class="chat-input">
+    <textarea placeholder="Type your message..."></textarea>
+    <button>Send</button>
+  </div>
+</div>
+
+<footer>
+  © 2025 Pockverse. All rights reserved.
+</footer>
+
+<script>
+  // Accordion toggle
+  document.querySelectorAll(".accordion").forEach(acc => {
+    acc.addEventListener("click", function() {
+      this.classList.toggle("active");
+      const panel = this.nextElementSibling;
+      panel.style.display = panel.style.display === "flex" ? "none" : "flex";
+    });
+  });
+
+  // Chat toggle
+  const chatBtn = document.querySelector(".chat-btn");
+  const chatWindow = document.querySelector(".chat-window");
+  chatBtn.addEventListener("click", () => {
+    chatWindow.style.display = chatWindow.style.display === "flex" ? "none" : "flex";
+  });
+
+  // Material preview logic
+  const materials = {
+    "Corrugated": { img:"https://via.placeholder.com/80?text=Corrugated", desc:"Strong and durable, perfect for shipping boxes." },
+    "White-card": { img:"https://via.placeholder.com/80?text=White+Card", desc:"Smooth surface, ideal for printing and packaging." },
+    "White-cardboard": { img:"https://via.placeholder.com/80?text=White+Cardboard", desc:"Thicker than card paper, excellent for rigid boxes." },
+    "Kraft": { img:"https://via.placeholder.com/80?text=Kraft", desc:"Natural brown paper, eco-friendly and sturdy." },
+    "Coated": { img:"https://via.placeholder.com/80?text=Coated", desc:"Shiny coated surface, suitable for premium printing." },
+    "Uncoated": { img:"https://via.placeholder.com/80?text=Uncoated", desc:"Matte surface, easy to write on and eco-friendly." },
+    "FSC": { img:"https://via.placeholder.com/80?text=FSC", desc:"Certified sustainable paper, environmentally responsible." }
+  };
+
+  const materialSelect = document.getElementById("material-select");
+  const materialImage = document.getElementById("material-image");
+  const materialDesc = document.getElementById("material-description");
+
+  materialSelect.addEventListener("change", () => {
+    const value = materialSelect.value;
+    if(materials[value]) {
+      materialImage.src = materials[value].img;
+      materialImage.style.display = "inline-block";
+      materialDesc.textContent = materials[value].desc;
+    } else {
+      materialImage.style.display = "none";
+      materialDesc.textContent = "";
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockverse Designer Profile | Designer Marketplace</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      background-color: #f5f8fa;
+      color: #333;
+    }
+
+    /* HEADER */
+    header {
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 50px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      color: #007bff;
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 20px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #007bff;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 80px auto 40px;
+      padding: 0 40px;
+    }
+
+    .hero-info {
+      flex: 1;
+      min-width: 300px;
+      padding-right: 40px;
+    }
+
+    .hero-info h2 {
+      font-size: 36px;
+      color: #007bff;
+      margin-bottom: 15px;
+    }
+
+    .hero-info p {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .hero-info button {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+
+    .hero-info button:hover {
+      background: #0056b3;
+    }
+
+    .hero-photo {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      min-width: 280px;
+    }
+
+    .hero-photo img {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid #eaf3ff;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* STATS */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      text-align: center;
+      margin: 60px 0;
+    }
+
+    .stat {
+      color: #007bff;
+    }
+
+    .stat h3 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .stat p {
+      color: #555;
+      font-size: 14px;
+    }
+
+    /* PROJECTS */
+    .projects-section {
+      max-width: 1200px;
+      margin: 0 auto 80px;
+      padding: 0 40px;
+    }
+
+    .projects-section h3 {
+      font-size: 24px;
+      color: #007bff;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 25px;
+    }
+
+    .project-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .project-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .project-info {
+      padding: 15px;
+    }
+
+    .project-info h4 {
+      color: #007bff;
+      font-size: 16px;
+      margin: 0 0 6px;
+    }
+
+    .project-info p {
+      color: #555;
+      font-size: 13px;
+    }
+
+    /* CTA JOIN SECTION */
+    .join-section {
+      background: linear-gradient(135deg, #007bff, #0a3d62);
+      color: #fff;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .join-section h3 {
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+
+    .join-section p {
+      font-size: 16px;
+      margin-bottom: 25px;
+    }
+
+    .join-section a {
+      display: inline-block;
+      background: #fff;
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 12px 30px;
+      border-radius: 25px;
+      transition: background 0.3s ease;
+    }
+
+    .join-section a:hover {
+      background: #eaf6ff;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #fff;
+      text-align: center;
+      padding: 25px 0;
+      font-size: 14px;
+      color: #777;
+      border-top: 1px solid #eee;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-info {
+        padding: 0;
+      }
+
+      .stats {
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <h1>Pockverse Marketplace</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Designers</a>
+      <a href="#">Projects</a>
+      <a href="#">Join</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-info">
+      <h2>Emily Johnson</h2>
+      <p>Creative designer specializing in packaging, branding, and digital mockups. Turning concepts into market-ready visuals that inspire and connect with audiences.</p>
+      <button>Join the Pockverse Marketplace</button>
+    </div>
+    <div class="hero-photo">
+      <img src="https://via.placeholder.com/400x400" alt="Designer Photo">
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <h3>132</h3>
+      <p>Projects Completed</p>
+    </div>
+    <div class="stat">
+      <h3>78</h3>
+      <p>Happy Clients</p>
+    </div>
+    <div class="stat">
+      <h3>5★</h3>
+      <p>Average Rating</p>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <section class="projects-section">
+    <h3>Featured Projects</h3>
+    <div class="projects-grid">
+      <div class="project-card">
+        <img src="https://via.placeholder.com/400x300?text=Eco+Box" alt="">
+        <div class="project-info">
+          <h4>Eco Box Series</h4>
+          <p>Recyclable skincare packaging concept.</p>
+        </div>
+      </div>
+      <div class="project-card">
+        <img src="https://via.placeholder.com/400x300?text=Coffee+Labels" alt="">
+        <div class="project-info">
+          <h4>Coffee Label Set</h4>
+          <p>Minimalist branding for premium blends.</p>
+        </div>
+      </div>
+      <div class="project-card">
+        <img src="https://via.placeholder.com/400x300?text=Tea+Brand" alt="">
+        <div class="project-info">
+          <h4>Tea Brand Rework</h4>
+          <p>New identity for organic tea line.</p>
+        </div>
+      </div>
+      <div class="project-card">
+        <img src="https://via.placeholder.com/400x300?text=Mockup+Visuals" alt="">
+        <div class="project-info">
+          <h4>3D Mockup Visuals</h4>
+          <p>High-quality product presentation renders.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="join-section">
+    <h3>Join the Pockverse Designer Community</h3>
+    <p>Showcase your work, collaborate with global brands, and get recognized by thousands of buyers.</p>
+    <a href="#">Become a Designer</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2025 Pockverse Designer Marketplace. All Rights Reserved.
+  </footer>
+
+</body>
+</html>

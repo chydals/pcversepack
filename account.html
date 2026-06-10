@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pockverse | Interactive Checkout 購物車 & 結帳</title>
+<style>
+  :root{
+    --brand:#004aad;
+    --brand-2:#0066e3;
+    --muted:#6b7280;
+    --bg:#f8f9fc;
+    --card:#ffffff;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background:var(--bg);
+    color:#222;
+    -webkit-font-smoothing:antialiased;
+  }
+  header{
+    background:var(--brand);
+    color:#fff;
+    padding:18px 16px;
+    text-align:center;
+    font-weight:600;
+    letter-spacing:0.4px;
+    font-size:1.25rem;
+  }
+
+  .page {
+    max-width:1150px;
+    margin:24px auto;
+    padding:18px;
+    display:grid;
+    grid-template-columns: 1fr 360px;
+    gap:20px;
+  }
+
+  /* single-column on mobile */
+  @media (max-width:1000px){
+    .page { grid-template-columns: 1fr; padding:12px; }
+    .summary { order:2; position:static; width:auto; }
+  }
+
+  /* main card */
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:18px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.06);
+  }
+
+  /* progress */
+  .progress {
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-bottom:16px;
+  }
+  .step {
+    flex:1;
+    height:10px;
+    background:#e6eefc;
+    border-radius:6px;
+    position:relative;
+    overflow:hidden;
+  }
+  .step.active { background: linear-gradient(90deg,var(--brand),var(--brand-2)); }
+  .step-labels { display:flex; gap:12px; justify-content:space-between; font-size:0.9rem; color:var(--muted); margin-bottom:8px; }
+
+  h2{ color:var(--brand); margin:0 0 12px 0; font-size:1.1rem; }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:8px;
+  }
+  th, td { padding:10px; border-bottom:1px solid #f2f4f8; text-align:left; font-size:0.95rem; vertical-align:middle; }
+  th { color:var(--muted); font-weight:600; background:transparent; border-bottom:1px solid #eef2ff; }
+
+  .product-row { display:flex; gap:12px; align-items:center; }
+  .product-thumb { width:56px; height:56px; border-radius:6px; background:#f0f3ff; display:inline-flex; align-items:center; justify-content:center; font-size:0.75rem; color:var(--brand); }
+  .qty-input { width:84px; padding:8px; border-radius:6px; border:1px solid #d6dbe9; }
+
+  /* sections */
+  .section { margin-bottom:18px; }
+  label { display:block; font-size:0.9rem; margin-bottom:6px; color:#213547; font-weight:600; }
+  input[type="text"], input[type="tel"], input[type="email"], select, textarea, input[type="number"]{
+    width:100%; padding:10px; border-radius:8px; border:1px solid #d6dbe9; background:#fff; font-size:0.95rem;
+  }
+  textarea{ min-height:86px; resize:vertical; }
+
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:680px){ .two-col{ grid-template-columns:1fr; } }
+
+  .muted{ color:var(--muted); font-size:0.88rem; }
+
+  .row-actions{ display:flex; gap:8px; align-items:center; margin-top:8px; }
+  .btn { background:var(--brand); color:#fff; border:none; padding:12px 16px; border-radius:10px; cursor:pointer; font-weight:600; }
+  .btn.secondary { background:#eef4ff; color:var(--brand); border:1px solid rgba(0,74,173,0.08); }
+  .btn.ghost { background:transparent; color:var(--brand); border:1px solid #e6eefc; }
+
+  /* summary */
+  .summary {
+    position:sticky;
+    top:20px;
+    height:fit-content;
+  }
+  .summary .card { padding:16px; }
+  .summary .line { display:flex; justify-content:space-between; margin-bottom:10px; }
+  .summary .total { display:flex; justify-content:space-between; font-weight:700; font-size:1.05rem; color:var(--brand); margin-top:8px; }
+
+  /* shipping options */
+  .shipping-options { display:flex; gap:8px; flex-direction:column; }
+  .pay-methods { display:flex; gap:8px; flex-wrap:wrap; }
+  .pay-option { border-radius:8px; padding:8px 10px; border:1px solid #e6eefc; cursor:pointer; display:flex; gap:8px; align-items:center; min-width:120px; }
+  .pay-option input{ transform:scale(1.1); margin-right:6px; }
+
+  .helper { font-size:0.86rem; color:var(--muted); margin-top:6px; }
+
+  /* small */
+  .small { font-size:0.85rem; color:var(--muted); }
+
+  /* error */
+  .error { color:#b91c1c; font-size:0.85rem; margin-top:6px; }
+
+  /* footer */
+  footer{ text-align:center; margin:18px 0; color:var(--muted); font-size:0.9rem; }
+  .loading { display:inline-block; width:18px; height:18px; border-radius:50%; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; animation:spin 1s linear infinite; }
+  @keyframes spin{ to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+<header>🛒 Pockverse Checkout — 購物車 & 結帳</header>
+
+<main class="page">
+  <!-- LEFT: main flow -->
+  <div class="card" id="flowCard">
+    <div class="progress">
+      <div class="step" id="p1"></div>
+      <div class="step" id="p2"></div>
+      <div class="step" id="p3"></div>
+    </div>
+    <div class="step-labels">
+      <div class="small">1. Review<br>訂單確認</div>
+      <div class="small">2. Shipping<br>運輸資訊</div>
+      <div class="small">3. Payment<br>付款與確認</div>
+    </div>
+
+    <!-- STEP 1: Review Order -->
+    <div class="step-panel" data-step="1">
+      <h2>Order Summary 訂單摘要</h2>
+      <table aria-label="order summary">
+        <thead>
+          <tr><th style="width:48%;">Product / 產品</th><th>Qty / 數量</th><th>Unit / 單價</th><th style="text-align:right">Subtotal / 小計</th></tr>
+        </thead>
+        <tbody id="cartBody">
+          <!-- JS will populate rows -->
+        </tbody>
+      </table>
+
+      <div class="row-actions" style="justify-content:space-between;">
+        <div class="muted">All prices in <strong>NTD</strong>. 價格以新台幣計價。</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn secondary" id="continueToShipping">Next → 運輸資訊</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Shipping -->
+    <div class="step-panel" data-step="2" style="display:none;">
+      <h2>Shipping Information 運輸資訊</h2>
+
+      <div class="two-col">
+        <div>
+          <label>Contact Name / 聯絡人姓名</label>
+          <input id="shipName" type="text" placeholder="e.g., John Lin / 例: 張三" />
+          <label>Company (optional) 公司 (選填)</label>
+          <input id="shipCompany" type="text" placeholder="Company name / 公司名稱" />
+          <label>Country / Region 國家或地區</label>
+          <select id="country">
+            <option value="Taiwan">Taiwan / 台灣</option>
+            <option value="Japan">Japan / 日本</option>
+            <option value="United States">United States / 美國</option>
+            <option value="China">China / 中國</option>
+            <option value="Other">Other / 其他</option>
+          </select>
+          <label>Address / 地址</label>
+          <input id="shipAddress" type="text" placeholder="Street, City, Postal code / 地址、城市、郵遞區號" />
+        </div>
+
+        <div>
+          <label>Phone / 電話</label>
+          <input id="shipPhone" type="tel" placeholder="+886 9xx xxx xxx" />
+          <label>Email / 電子郵件</label>
+          <input id="shipEmail" type="email" placeholder="contact@company.com" />
+          <label>Shipping Method / 運輸方式</label>
+          <div class="shipping-options" id="shippingOptions">
+            <label class="small"><input type="radio" name="shipMethod" value="sea" checked> Sea Freight / 海運 (estimate)</label>
+            <label class="small"><input type="radio" name="shipMethod" value="air"> Air Freight / 空運</label>
+            <label class="small"><input type="radio" name="shipMethod" value="fedex"> FedEx</label>
+            <label class="small"><input type="radio" name="shipMethod" value="dhl"> DHL</label>
+            <label class="small"><input type="radio" name="shipMethod" value="post"> Taiwan Post / 台灣郵局</label>
+          </div>
+
+          <label style="margin-top:8px;">Incoterm 國際貿易條款</label>
+          <select id="incoterm">
+            <option>FOB</option><option>CIF</option><option>DDP</option><option>EXW</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row-actions" style="margin-top:12px; justify-content:space-between;">
+        <div>
+          <button class="btn ghost" id="backToReview">← Back 返回</button>
+        </div>
+        <div>
+          <button class="btn secondary" id="saveShipping">Save & Continue 儲存並繼續</button>
+          <button class="btn" id="toPayment">Next → 付款</button>
+        </div>
+      </div>
+
+      <div id="shipError" class="error" style="display:none;"></div>
+    </div>
+
+    <!-- STEP 3: Payment -->
+    <div class="step-panel" data-step="3" style="display:none;">
+      <h2>Payment & Confirmation 付款與確認</h2>
+
+      <div class="two-col">
+        <div>
+          <label>Payment Method / 付款方式</label>
+          <div class="pay-methods" id="payMethods">
+            <label class="pay-option"><input type="radio" name="pay" value="card" checked> Credit Card 信用卡</label>
+            <label class="pay-option"><input type="radio" name="pay" value="bank"> Bank Transfer 銀行轉帳</label>
+            <label class="pay-option"><input type="radio" name="pay" value="paypal"> PayPal</label>
+          </div>
+
+          <div id="paymentFields" style="margin-top:12px;">
+            <!-- credit card form (placeholder - integrate 3rd party gateway) -->
+            <div id="cardFields">
+              <label>Cardholder Name / 持卡人</label>
+              <input id="cardName" type="text" placeholder="Name on card / 卡片上的姓名" />
+              <label>Card Number / 卡號</label>
+              <input id="cardNumber" type="text" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" />
+              <div class="two-col">
+                <div>
+                  <label>Expiry / 到期</label>
+                  <input id="cardExp" type="text" placeholder="MM/YY" />
+                </div>
+                <div>
+                  <label>CVC</label>
+                  <input id="cardCvc" type="text" placeholder="123" />
+                </div>
+              </div>
+              <div class="helper">This is a demo form — integrate a payment gateway (Stripe/PayPal) for real payments. 這是示範表單。</div>
+            </div>
+
+            <div id="bankFields" style="display:none;">
+              <label>Bank info / 銀行資訊</label>
+              <textarea id="bankInfo" placeholder="Bank name, account number, instructions..."></textarea>
+            </div>
+
+            <div id="paypalFields" style="display:none;">
+              <p class="small">You will be redirected to PayPal to complete payment. 您將被導向 PayPal 完成付款。</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label>Billing Address / 發票地址</label>
+          <label class="small"><input type="checkbox" id="sameAsShip"> Same as shipping address 與運輸地址相同</label>
+          <input id="billAddress" type="text" placeholder="Billing address / 發票地址" />
+          <label>Remarks 備註 (optional)</label>
+          <textarea id="remarks" placeholder="Special instructions / 特別指示"></textarea>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;" id="paymentError" class="error" hidden></div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:14px;">
+        <div><button class="btn ghost" id="backToShip">← Back 返回</button></div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn secondary" id="confirmReview">Review Before Paying 確認資訊</button>
+          <button class="btn" id="payNow"><span id="payNowText">Confirm & Pay 確認並付款</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation (hidden initially) -->
+    <div class="step-panel" data-step="4" style="display:none;">
+      <h2>Order Confirmed 已確認訂單</h2>
+      <p class="muted">Thank you! Your order has been placed. 謝謝！您的訂單已建立。</p>
+      <div class="small" id="orderRef"></div>
+      <div style="margin-top:12px;">
+        <button class="btn" id="newOrder">Create Another Order 建立新訂單</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: summary -->
+  <aside class="summary">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div><strong>Order Summary / 訂單摘要</strong></div>
+        <div class="small muted">Preview</div>
+      </div>
+
+      <div id="summaryItems" style="margin-bottom:8px;"></div>
+
+      <div class="line"><div class="small">Subtotal / 小計</div><div id="sumSubtotal">NT$ 0</div></div>
+      <div class="line"><div class="small">Shipping (est) / 運費(估)</div><div id="sumShipping">NT$ 0</div></div>
+      <div class="line"><div class="small">Tax / 稅金</div><div id="sumTax">NT$ 0</div></div>
+      <div class="total"><div>Total / 總計</div><div id="sumTotal">NT$ 0</div></div>
+
+      <div class="helper" style="margin-top:12px;">Shipping cost is estimated and finalized before payment. 運費為估算值，將在付款前確認。</div>
+    </div>
+  </aside>
+</main>
+
+<footer>© 2025 Pockverse. All rights reserved.</footer>
+
+<script>
+/* ---------------------------
+  Demo data & initialization
+   - Replace with server-sent cart data in production
+----------------------------*/
+const initialCart = [
+  { id: 'box-a', name: 'Corrugated Box 瓦楞紙箱', qty: 500, unit: 25 },
+  { id: 'box-b', name: 'Folding Box 折疊紙盒', qty: 300, unit: 30 }
+];
+
+// currency formatting helper
+const fmt = v => 'NT$ ' + Number(v).toLocaleString('en-US');
+
+/* App state */
+const state = {
+  cart: JSON.parse(JSON.stringify(initialCart)),
+  shipping: { method: 'sea', cost: 0 },
+  taxRate: 0, // B2B example: set tax if necessary
+  step: 1
+};
+
+/* ---------- render cart rows ---------- */
+function renderCart(){
+  const tbody = document.getElementById('cartBody');
+  tbody.innerHTML = '';
+  state.cart.forEach((item, i) => {
+    const tr = document.createElement('tr');
+
+    // product cell (thumb + name)
+    const tdProd = document.createElement('td');
+    const prodWrap = document.createElement('div');
+    prodWrap.className = 'product-row';
+    const thumb = document.createElement('div');
+    thumb.className = 'product-thumb';
+    thumb.textContent = (i+1);
+    const name = document.createElement('div');
+    name.innerHTML = `<div style="font-weight:600">${item.name}</div><div class="small muted">SKU: ${item.id}</div>`;
+    prodWrap.appendChild(thumb);
+    prodWrap.appendChild(name);
+    tdProd.appendChild(prodWrap);
+
+    // qty
+    const tdQty = document.createElement('td');
+    const qtyInput = document.createElement('input');
+    qtyInput.type = 'number';
+    qtyInput.min = 1;
+    qtyInput.value = item.qty;
+    qtyInput.className = 'qty-input';
+    qtyInput.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value) || 0;
+      if (val < 1) { e.target.value = 1; return; }
+      item.qty = val;
+      calculateTotals();
+      renderCart(); // re-render to reflect changes
+    });
+    tdQty.appendChild(qtyInput);
+
+    // unit
+    const tdUnit = document.createElement('td');
+    tdUnit.textContent = fmt(item.unit);
+
+    // subtotal
+    const tdSub = document.createElement('td');
+    tdSub.style.textAlign = 'right';
+    tdSub.textContent = fmt(item.qty * item.unit);
+
+    // append
+    tr.appendChild(tdProd);
+    tr.appendChild(tdQty);
+    tr.appendChild(tdUnit);
+    tr.appendChild(tdSub);
+    tbody.appendChild(tr);
+  });
+  calculateTotals();
+}
+
+/* ---------- summary render ---------- */
+function renderSummary(){
+  const summaryItems = document.getElementById('summaryItems');
+  summaryItems.innerHTML = '';
+  state.cart.forEach(it => {
+    const div = document.createElement('div');
+    div.style.display = 'flex';
+    div.style.justifyContent = 'space-between';
+    div.style.marginBottom = '6px';
+    div.innerHTML = `<div class="small">${it.name} × ${it.qty}</div><div class="small">${fmt(it.qty*it.unit)}</div>`;
+    summaryItems.appendChild(div);
+  });
+}
+
+/* ---------- totals ---------- */
+function calculateTotals(){
+  const subtotal = state.cart.reduce((s,i)=> s + (i.qty * i.unit), 0);
+  // simple shipping estimator (demo rules)
+  const shipMethod = state.shipping.method || 'sea';
+  let shippingCost = 0;
+  if (shipMethod === 'sea') shippingCost = Math.round(Math.max(500, subtotal * 0.02)); // demo: 2% or 500
+  if (shipMethod === 'air') shippingCost = Math.round(Math.max(1200, subtotal * 0.06));
+  if (shipMethod === 'fedex') shippingCost = Math.round(Math.max(1000, subtotal * 0.05));
+  if (shipMethod === 'dhl') shippingCost = Math.round(Math.max(1100, subtotal * 0.055));
+  if (shipMethod === 'post') shippingCost = Math.round(Math.max(200, subtotal * 0.01));
+
+  state.shipping.cost = shippingCost;
+  const tax = Math.round(subtotal * state.taxRate);
+  const total = subtotal + shippingCost + tax;
+
+  // write UI
+  document.getElementById('sumSubtotal').textContent = fmt(subtotal);
+  document.getElementById('sumShipping').textContent = fmt(shippingCost);
+  document.getElementById('sumTax').textContent = fmt(tax);
+  document.getElementById('sumTotal').textContent = fmt(total);
+
+  renderSummary();
+}
+
+/* ---------- step control & validation ---------- */
+function showStep(n){
+  state.step = n;
+  // progress bars
+  document.getElementById('p1').classList.toggle('active', n>=1);
+  document.getElementById('p2').classList.toggle('active', n>=2);
+  document.getElementById('p3').classList.toggle('active', n>=3);
+
+  // show/hide step panels
+  document.querySelectorAll('.step-panel').forEach(panel=>{
+    const step = parseInt(panel.getAttribute('data-step'));
+    panel.style.display = (step === n) ? 'block' : 'none';
+  });
+
+  // if final confirm (4) show confirmation
+  if (n === 4){
+    document.querySelectorAll('.step-panel').forEach(panel=>{
+      const step = parseInt(panel.getAttribute('data-step'));
+      panel.style.display = (step === 4) ? 'block' : 'none';
+    });
+  } else {
+    // ensure summary scroll to top on mobile for visibility
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+/* validation for shipping */
+function validateShipping(){
+  const name = document.getElementById('shipName').value.trim();
+  const addr = document.getElementById('shipAddress').value.trim();
+  const phone = document.getElementById('shipPhone').value.trim();
+  const email = document.getElementById('shipEmail').value.trim();
+  const errDiv = document.getElementById('shipError');
+  errDiv.style.display = 'none';
+  errDiv.textContent = '';
+  if (!name) { errDiv.textContent = 'Please enter contact name / 請輸入聯絡人姓名'; errDiv.style.display='block'; return false; }
+  if (!addr) { errDiv.textContent = 'Please enter address / 請輸入地址'; errDiv.style.display='block'; return false; }
+  if (!phone) { errDiv.textContent = 'Please enter phone number / 請輸入電話號碼'; errDiv.style.display='block'; return false; }
+  if (!email || !email.includes('@')) { errDiv.textContent = 'Please enter a valid email / 請輸入有效電子郵件'; errDiv.style.display='block'; return false; }
+  return true;
+}
+
+/* ---------- event wiring ---------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderCart();
+  showStep(1);
+
+  // shipping method radio change -> recalc
+  document.getElementById('shippingOptions').addEventListener('change', (e) => {
+    if (e.target.name === 'shipMethod'){
+      state.shipping.method = e.target.value;
+      calculateTotals();
+    }
+  });
+
+  // next to shipping
+  document.getElementById('continueToShipping').addEventListener('click', ()=>{
+    showStep(2);
+  });
+
+  document.getElementById('backToReview').addEventListener('click', ()=> showStep(1));
+  document.getElementById('backToShip').addEventListener('click', ()=> showStep(2));
+  document.getElementById('toPayment').addEventListener('click', ()=>{
+    // Validate shipping before going to payment
+    if (!validateShipping()) return;
+    showStep(3);
+  });
+  document.getElementById('saveShipping').addEventListener('click', ()=>{
+    if (!validateShipping()) return;
+    // could save to server here
+    alert('Shipping info saved (demo). 運輸資訊已儲存（示範）');
+  });
+
+  // payment method toggles
+  document.getElementById('payMethods').addEventListener('change', (e) => {
+    const v = e.target.value;
+    document.getElementById('cardFields').style.display = (v === 'card') ? 'block' : 'none';
+    document.getElementById('bankFields').style.display = (v === 'bank') ? 'block' : 'none';
+    document.getElementById('paypalFields').style.display = (v === 'paypal') ? 'block' : 'none';
+  });
+
+  // billing toggle
+  document.getElementById('sameAsShip').addEventListener('change', (e) => {
+    if (e.target.checked){
+      const name = document.getElementById('shipName').value;
+      const addr = document.getElementById('shipAddress').value;
+      document.getElementById('billAddress').value = addr || '';
+    } else {
+      document.getElementById('billAddress').value = '';
+    }
+  });
+
+  // confirm review (optional)
+  document.getElementById('confirmReview').addEventListener('click', ()=>{
+    // quick validation
+    if (!validateShipping()) return;
+    alert('Please review the summary on the right before paying. 請檢查右側摘要後付款。');
+  });
+
+  // pay now (simulate)
+  document.getElementById('payNow').addEventListener('click', async ()=>{
+    const payNowText = document.getElementById('payNowText');
+    const payBtn = document.getElementById('payNow');
+    // minimal payment validation
+    const payMethod = document.querySelector('input[name="pay"]:checked').value;
+    if (payMethod === 'card') {
+      const cardName = document.getElementById('cardName').value.trim();
+      const cardNumber = document.getElementById('cardNumber').value.replace(/\s+/g,'').trim();
+      if (!cardName || cardNumber.length < 12) {
+        document.getElementById('paymentError').hidden = false;
+        document.getElementById('paymentError').textContent = 'Please fill in valid card details (demo). 請填寫有效信用卡資訊（示範）';
+        return;
+      } else {
+        document.getElementById('paymentError').hidden = true;
+      }
+    }
+    // simulate network/loading
+    payBtn.disabled = true;
+    payNowText.innerHTML = '<span class="loading"></span> Processing... 處理中...';
+    await new Promise(r => setTimeout(r, 1600));
+
+    // In production: call server to create order & process payment, then navigate to confirmation
+    // Simulated success:
+    const ref = 'PV' + Date.now().toString().slice(-6);
+    document.getElementById('orderRef').textContent = `Reference / 訂單編號: ${ref}`;
+    showStep(4);
+  });
+
+  document.getElementById('newOrder').addEventListener('click', ()=>{
+    // reset demo state
+    state.cart = JSON.parse(JSON.stringify(initialCart));
+    renderCart();
+    showStep(1);
+  });
+
+  // shipping method radios initial wiring to calculate totals if user toggles manually
+  document.querySelectorAll('input[name="shipMethod"]').forEach(r=>{
+    r.addEventListener('change', (e) => {
+      state.shipping.method = e.target.value;
+      calculateTotals();
+    });
+  });
+
+  // ensure pay method toggles on click for initial state
+  document.querySelectorAll('input[name="pay"]').forEach(r=>{
+    r.addEventListener('change', (e)=>{
+      const v = e.target.value;
+      document.getElementById('cardFields').style.display = (v === 'card') ? 'block' : 'none';
+      document.getElementById('bankFields').style.display = (v === 'bank') ? 'block' : 'none';
+      document.getElementById('paypalFields').style.display = (v === 'paypal') ? 'block' : 'none';
+    });
+  });
+
+}); // DOMContentLoaded end
+</script>
+</body>
+</html>
