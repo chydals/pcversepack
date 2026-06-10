@@ -15,32 +15,66 @@
 
     /* HEADER */
     header {
-      background-color: #003366;
+      background-color: #0b2545; /* Updated color to match homepage theme */
       color: #fff;
       padding: 16px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: #00aaff;
+    }
+
+    .logo a {
+      color: #00aaff;
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
     }
 
     nav a {
       color: #fff;
       text-decoration: none;
-      margin-left: 24px;
       font-size: 15px;
       font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      padding: 5px 0;
       transition: color 0.3s ease;
     }
 
+    nav a span {
+      font-size: 12px;
+      color: #ccc;
+      margin-top: 2px;
+    }
+
     nav a:hover {
-      color: #a8d0ff;
+      color: #00aaff;
+    }
+
+    /* Subtle underline indicating current page / active tab */
+    nav a.active::after, nav a:hover::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #00aaff;
     }
 
     /* MAIN */
@@ -148,7 +182,7 @@
 
     /* FOOTER */
     footer {
-      background-color: #003366;
+      background-color: #0b2545;
       color: #fff;
       text-align: center;
       padding: 24px;
@@ -178,21 +212,18 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
-    <h1>Pockverse</h1>
-    <nav>
-      <a href="#">About Us</a>
-      <a href="#">Products & Services</a>
-      <a href="#">Designer Marketplace</a>
-      <a href="#">Cart & Checkout</a>
-      <a href="#">My Account</a>
+    <div class="logo"><a href="index.html">Pockverse</a></div>
+    <nav aria-label="Main Navigation">
+      <a href="about.html" class="active">About Us<span>關於我們</span></a>
+      <a href="services.html">Products & Services<span>產品服務</span></a>
+      <a href="designer-marketplace.html">Designer Marketplace<span>設計師媒合</span></a>
+      <a href="cart.html">Cart & Checkout<span>購物車 & 結帳</span></a>
+      <a href="account.html">My Account<span>會員中心</span></a>
     </nav>
   </header>
 
-  <!-- MAIN -->
   <main>
-    <!-- INTRO -->
     <section class="intro">
       <h2>About Pockverse</h2>
       <p>
@@ -201,7 +232,6 @@
       </p>
     </section>
 
-    <!-- MISSION -->
     <section class="section">
       <div class="text">
         <h3>Our Mission</h3>
@@ -219,7 +249,6 @@
       <img src="https://images.unsplash.com/photo-1607082349566-187342175e2a" alt="Mission">
     </section>
 
-    <!-- VISION -->
     <section class="section">
       <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786" alt="Vision">
       <div class="text">
@@ -232,7 +261,6 @@
       </div>
     </section>
 
-    <!-- WHY CHOOSE US -->
     <section class="section">
       <div class="text">
         <h3>Why Choose Pockverse?</h3>
@@ -247,16 +275,14 @@
       <img src="https://images.unsplash.com/photo-1563298723-dcfebaa392e3" alt="Why Choose Us">
     </section>
 
-    <!-- CTA -->
     <section class="cta">
       <h3>Partner with Pockverse Today</h3>
-      <a href="#">Discover Our Services</a>
+      <a href="services.html">Discover Our Services</a>
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer>
-    © 2025 Pockverse Co., Ltd. All rights reserved.
+    © 2026 Pockverse Co., Ltd. All rights reserved.
   </footer>
 
 </body>
