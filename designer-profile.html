@@ -215,7 +215,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
     <div class="logo"><a href="index.html">Pockverse</a></div>
     <nav aria-label="Main Navigation">
@@ -227,59 +226,50 @@
     </nav>
   </header>
 
-  <!-- USER TARGET CONTAINER -->
   <main class="profile-container">
     
-    <!-- LEFT SIDEBAR CAPTURE METRICS -->
     <aside class="hero-sidebar">
-      <div class="profile-hero-img" id="heroIcon"><i class="fa-solid fa-compass-drafting"></i></div>
-      <h1 id="designerName">Alex Chen</h1>
-      <div class="title-sub" id="designerTitle">Structural Packaging Specialist</div>
+      <div class="profile-hero-img" id="heroIcon"><i class="fa-solid fa-user-tie"></i></div>
+      <h1 id="designerName">Designer Name</h1>
+      <div class="title-sub" id="designerTitle">Specialty Field</div>
       
       <div class="rating-container">
-        <div class="stars" id="designerStars"><i class="fa-solid fa-star"></i> 4.9</div>
-        <span style="color:#777; font-size:13px;" id="reviewCount">(42 Corporate Reviews)</span>
+        <div class="stars" id="designerStars"></div>
+        <span style="color:#777; font-size:13px;" id="reviewCount"></span>
       </div>
 
       <div class="meta-metrics-list">
-        <div class="metric-row"><span>Location 區域</span><span id="metaLoc">Taipei, TW</span></div>
-        <div class="metric-row"><span>Experience 資歷</span><span id="metaExp">8+ Years</span></div>
-        <div class="metric-row"><span>Response 回覆</span><span id="metaResp">&lt; 2 Hours</span></div>
-        <div class="metric-row"><span>Projects 完成案</span><span id="metaProjects">134 Runs</span></div>
+        <div class="metric-row"><span>Location 區域</span><span id="metaLoc">-</span></div>
+        <div class="metric-row"><span>Experience 資歷</span><span id="metaExp">-</span></div>
+        <div class="metric-row"><span>Response 回覆</span><span id="metaResp">-</span></div>
+        <div class="metric-row"><span>Projects 完成案</span><span id="metaProjects">-</span></div>
       </div>
 
       <button class="action-btn" onclick="openModal()"><i class="fa-solid fa-paper-plane"></i> Book Custom Consultation</button>
     </aside>
 
-    <!-- RIGHT COMPONENT SPEC PANELS -->
     <section class="details-panel">
       
-      <!-- CARD 1: BIOGRAPHY -->
       <div class="content-card">
         <h2>Professional Biography 專業簡介</h2>
-        <p id="designerBio">
-          Specializing in standard corrugated manufacturing blueprints, heavy industrial shipping structures, and high-end interactive structural gift configurations. Expert in optimizing layout parameters for fast processing using web design tool matrix assets and automated cutting tables. Focused on delivering production-ready CAD rendering formats that perfectly reconcile aesthetic branding layouts with cost-effective assembly tolerances.
-        </p>
+        <p id="designerBio">Loading bio configuration data...</p>
       </div>
 
-      <!-- CARD 2: PORTFOLIO SHOWCASE -->
       <div class="content-card">
         <h2>Design Portfolio Highlight 歷年精選作品</h2>
         <div class="portfolio-grid" id="portfolioGrid">
-          <!-- Dynamic Items Injected Here -->
-        </div>
+          </div>
       </div>
 
     </section>
   </main>
 
-  <!-- INTERACTIVE BOOKING MODAL -->
   <div class="modal-overlay" id="bookingModal">
     <div class="modal-card">
       <h3>Request Project Consultation</h3>
       <div class="form-field">
         <label>Select Project Scope</label>
-        <input type="text" placeholder="e.g., Corrugated Structural Dieline Mapping">
+        <input type="text" placeholder="e.g., Structural Packaging Specification Layout">
       </div>
       <div class="form-field">
         <label>Preferred Delivery Timeline</label>
@@ -287,7 +277,7 @@
       </div>
       <div class="form-field">
         <label>Brief Functional Specification Notes</label>
-        <textarea rows="3" placeholder="Describe layout volume requirements, card stock preferences, etc."></textarea>
+        <textarea rows="3" placeholder="Describe layout volume requirements, branding parameters, etc."></textarea>
       </div>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeModal()">Cancel</button>
@@ -296,7 +286,6 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
     <div>© 2026 Pockverse Portal Layouts. All Rights Reserved.</div>
     <div class="footer-social">
@@ -309,94 +298,77 @@
     </div>
   </footer>
 
-  <!-- DYNAMIC DATA MATRIX MATCHING THE MARKETPLACE FILE -->
   <script>
     const designersData = {
       jane: {
         name: "Jane Liu",
-        title: "Packaging & Branding Expert",
-        stars: "<i class='fa-solid fa-star'></i> 4.8",
+        title: "Packaging & Branding",
+        stars: "<i class='fa-solid fa-star'></i><i class='fa-solid fa-star'></i><i class='fa-solid fa-star'></i><i class='fa-solid fa-star'></i><i class='fa-solid fa-star-half-stroke'></i> 4.5",
         reviews: "(56 Corporate Reviews)",
-        location: "Taichung, TW",
-        experience: "6 Years",
+        location: "Taipei, TW",
+        experience: "6+ Years",
         response: "< 1 Hour",
         projects: "92 Runs",
         icon: "<i class='fa-solid fa-box'></i>",
-        bio: "Focused heavily on standard branding consistency, retail folding cartons, and premium cosmetic display matrices. Jane specializes in translating visual identity systems directly onto structural dieline frameworks seamlessly.",
+        bio: "Specializing in standard brand identity consistency, retail folding cartons, and premium cosmetic box packaging layouts. Jane excels at translating corporate color palettes and visual systems directly into production-ready dieline frameworks.",
         portfolio: [
-          { title: "Minimalist Retail Box", desc: "Clean geometric closures for boutique consumer goods.", bg: "#eef2f5" },
-          { title: "Cosmetics Display Run", desc: "Double-walled luxury matte finished countertop layouts.", bg: "#fce4d6" }
+          { title: "Minimalist Retail Carton", desc: "Clean geometric card stock closure layouts.", bg: "#eef2f5" },
+          { title: "Eco Kraft Mailer Run", desc: "100% recyclable structural shipping structures.", bg: "#e3ebf3" }
         ]
       },
       tom: {
         name: "Tom Chen",
-        title: "Illustration & 3D Design Engineer",
-        stars: "<i class='fa-solid fa-star'></i> 4.7",
+        title: "Illustration & 3D Design",
+        stars: "<i class='fa-solid fa-star'></i><i class='fa-solid fa-star'></i><i class='fa-solid fa-star'></i><i class='fa-solid fa-star'></i><i class='fa-regular fa-star'></i> 4.0",
         reviews: "(38 Corporate Reviews)",
-        location: "Taipei, TW",
+        location: "New Taipei, TW",
         experience: "5 Years",
-        response: "< 3 Hours",
+        response: "< 2 Hours",
         projects: "74 Runs",
         icon: "<i class='fa-solid fa-cubes'></i>",
-        bio: "Specializing in multi-dimensional box spatial simulations, custom surface vector artwork configurations, and photorealistic 3D asset pipeline renders ready for client validation.",
+        bio: "Specializing in complex box spatial simulations, custom vector pattern configurations, and photorealistic 3D asset renders. Tom bridges the gap between raw functional engineering specs and beautiful consumer-facing graphics.",
         portfolio: [
-          { title: "3D Beverage Crate Simulation", desc: "Rigid plastic structural array rendering presets.", bg: "#e3ebf3" },
-          { title: "Vector Holiday Mailer", desc: "High-density custom decorative illustrations printed on Kraft surfaces.", bg: "#e2f0d9" }
+          { title: "3D Beverage Box Simulation", desc: "Rigid corrugated asset rendering layouts.", bg: "#fce4d6" },
+          { title: "Vector Pattern Holiday Slip", desc: "High-density micro-embossed surface artwork.", bg: "#e2f0d9" }
         ]
       },
       emily: {
         name: "Emily Wong",
-        title: "Print Layout & CAD Structuralist",
-        stars: "<i class='fa-solid fa-star'></i> 4.5",
+        title: "Print Layout & Packaging",
+        stars: "<i class='fa-solid fa-star'></i><i class='fa-solid fa-star'></i><i class='fa-solid fa-star'></i><i class='fa-regular fa-star'></i><i class='fa-regular fa-star'></i> 3.0",
         reviews: "(29 Corporate Reviews)",
-        location: "New Taipei, TW",
-        experience: "7 Years",
-        response: "< 2 Hours",
+        location: "Taichung, TW",
+        experience: "7+ Years",
+        response: "< 3 Hours",
         projects: "112 Runs",
         icon: "<i class='fa-solid fa-print'></i>",
-        bio: "An absolute technical precision authority on machine tolerances, automated industrial production run configurations, and custom heavy-duty corrugated board parameters.",
+        bio: "A technical print specialist focused entirely on physical press machine tolerances, custom assembly layouts, and structural volume configuration management. Emily guarantees flawless output for high-volume automated cutting tables.",
         portfolio: [
-          { title: "Industrial Shipping Pallet Tray", desc: "Reinforced structural partition layouts tracking maximum weight loads.", bg: "#f8fafc" }
+          { title: "Industrial Partition Tray", desc: "Heavy-duty double-walled divider layout matrix.", bg: "#f8fafc" },
+          { title: "Premium Insert Sleeve", desc: "Precision CAD tolerances for fragile luxury runs.", bg: "#eef2f5" }
         ]
       },
       kevin: {
         name: "Kevin Zhang",
-        title: "Logo & Corporate Brand Developer",
-        stars: "<i class='fa-solid fa-star'></i> 4.6",
+        title: "Logo & Branding",
+        stars: "<i class='fa-solid fa-star'></i><i class='fa-solid fa-star'></i><i class='fa-solid fa-star'></i><i class='fa-regular fa-star'></i><i class='fa-regular fa-star'></i> 3.0",
         reviews: "(31 Corporate Reviews)",
         location: "Hsinchu, TW",
         experience: "4 Years",
         response: "< 4 Hours",
         projects: "55 Runs",
         icon: "<i class='fa-solid fa-paintbrush'></i>",
-        bio: "Dedicated to complete brand identity systems, high-end micro-embossed luxury box logos, and spot UV layout planning for executive-tier retail presentations.",
+        bio: "Dedicated to minimalism, spot UV configuration arrays, and typography alignment systems. Kevin works closely with structural teams to apply striking corporate symbols perfectly onto luxury rigid display boxes.",
         portfolio: [
-          { title: "Gold-foil Stationary Case", desc: "Premium minimalist corporate gift closures.", bg: "#fff" }
-        ]
-      },
-      default: {
-        name: "Alex Chen",
-        title: "Structural Packaging Specialist",
-        stars: "<i class='fa-solid fa-star'></i> 4.9",
-        reviews: "(42 Corporate Reviews)",
-        location: "Taipei, TW",
-        experience: "8+ Years",
-        response: "< 2 Hours",
-        projects: "134 Runs",
-        icon: "<i class='fa-solid fa-compass-drafting'></i>",
-        bio: "Specializing in standard corrugated manufacturing blueprints, heavy industrial shipping structures, and high-end interactive structural gift configurations. Expert in optimizing layout parameters for fast processing using web design tool matrix assets and automated cutting tables.",
-        portfolio: [
-          { title: "Eco Craft Mailer Box", desc: "Heavy duty, 100% recyclable shipping layout.", bg: "#e3ebf3" },
-          { title: "Premium Insert Sleeve", desc: "Custom structural inserts for fragile glass runs.", bg: "#e2f0d9" },
-          { title: "Magnetic Apparel Gift Case", desc: "Rigid double-walled retail boutique presentation.", bg: "#fce4d6" }
+          { title: "Gold-foil Boutique Box", desc: "Minimalist layout with custom micro-embossing specs.", bg: "#ffffff" }
         ]
       }
     };
 
-    // PARSE INCOMING ROUTING STRING PARAMETERS
+    // PARSE INCOMING PARAMETER (?id=jane, ?id=tom, etc.)
     const urlParams = new URLSearchParams(window.location.search);
-    const designerId = urlParams.get('id') || 'default';
-    const activeData = designersData[designerId] || designersData['default'];
+    const designerId = urlParams.get('id') || 'jane'; // Default to jane if no parameter passed
+    const activeData = designersData[designerId] || designersData['jane'];
 
     // RENDERING TEXT INJECTIONS INTO COMPONENT DOM
     document.getElementById('designerName').textContent = activeData.name;
@@ -412,7 +384,7 @@
 
     // GENERATE PORTFOLIO HIGHLIGHT BLOCKS
     const gridEl = document.getElementById('portfolioGrid');
-    gridEl.innerHTML = ''; // reset container
+    gridEl.innerHTML = ''; 
     activeData.portfolio.forEach(item => {
       const card = document.createElement('div');
       card.className = 'portfolio-item';
@@ -430,9 +402,9 @@
     function openModal() { document.getElementById('bookingModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('bookingModal').style.display = 'none'; }
     function submitConsultation() {
-      alert("Proposal Sent Successfully! Redirecting you to your account messaging workspace to sync details with " + activeData.name + ".");
+      alert("Proposal Submittal Confirmed! Redirecting you to your account messaging workspace to sync details with " + activeData.name + ".");
       closeModal();
-      window.location.href = "account.html"; // direct drop into active chat interface routing
+      window.location.href = "account.html"; 
     }
   </script>
 </body>
