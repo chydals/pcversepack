@@ -15,47 +15,60 @@
 
     /* HEADER */
     header {
-      background-color: #fff;
-      border-bottom: 1px solid #e0e0e0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 60px;
+      padding: 20px 50px;
+      background-color: #0b2545;
+      color: #fff;
       position: sticky;
       top: 0;
       z-index: 1000;
     }
 
     .logo {
-      font-size: 22px;
+      font-size: 28px;
       font-weight: 700;
-      color: #0a3d62;
-      letter-spacing: 1px;
+      color: #00aaff;
+    }
+
+    .logo a {
+      color: #00aaff;
+      text-decoration: none;
     }
 
     nav {
       display: flex;
-      align-items: center;
-      gap: 28px;
+      gap: 25px;
     }
 
     nav a {
-      text-decoration: none;
-      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       font-weight: 500;
-      text-align: center;
-      transition: color 0.2s ease;
+      color: #fff;
+      font-size: 16px;
+      text-decoration: none;
+      position: relative;
+      padding: 5px 0;
+      transition: all 0.2s;
     }
 
     nav a span {
-      display: block;
       font-size: 12px;
-      color: #777;
+      color: #ccc;
+      margin-top: 2px;
     }
 
-    nav a:hover,
-    nav a.active {
-      color: #007bff;
+    nav a.active::after, nav a:hover::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #00aaff;
     }
 
     /* HERO */
@@ -107,7 +120,6 @@
       font-size: 32px;
       margin-bottom: 60px;
       color: #0a3d62;
-      position: relative;
     }
 
     .steps {
@@ -164,19 +176,25 @@
     }
 
     .category-grid {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 20px;
+      flex-wrap: nowrap;
       max-width: 1150px;
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 30px;
     }
 
     .category-card {
+      flex: 1 1 0;
+      min-width: 180px;
+      max-width: 220px;
       background-color: #fff;
       border-radius: 16px;
       padding: 40px 20px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
       transition: transform 0.3s ease;
+      text-align: center;
     }
 
     .category-card:hover {
@@ -201,6 +219,84 @@
     .category-card p {
       font-size: 14px;
       color: #555;
+    }
+
+    /* FEATURED DESIGNERS */
+    .featured-designers {
+      background-color: #f7f9fc;
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .featured-designers h2 {
+      font-size: 32px;
+      color: #0a3d62;
+      margin-bottom: 50px;
+    }
+
+    .designer-grid {
+      max-width: 1150px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+    }
+
+    .designer-card {
+      background-color: #fff;
+      border-radius: 16px;
+      padding: 30px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .designer-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
+
+    .designer-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .designer-card h4 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      color: #007bff;
+    }
+
+    .designer-card p {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .designer-rating {
+      margin-bottom: 15px;
+    }
+
+    .designer-rating i {
+      margin: 0 1px;
+    }
+
+    .view-profile {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      padding: 8px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .view-profile:hover {
+      background-color: #005fcc;
     }
 
     /* CTA SECTION */
@@ -238,42 +334,66 @@
 
     /* FOOTER */
     footer {
-      background-color: #fff;
-      border-top: 1px solid #ddd;
+      background-color: #0b2545;
+      color: #fff;
       padding: 40px;
       text-align: center;
-      color: #666;
+      font-size: 14px;
     }
 
     footer a {
-      color: #666;
+      color: #fff;
       margin: 0 10px;
       text-decoration: none;
     }
 
     footer a:hover {
-      color: #007bff;
+      color: #00aaff;
     }
 
     .footer-social {
-      margin-top: 10px;
+      margin: 15px 0;
     }
 
     .footer-social a {
       margin: 0 8px;
       font-size: 18px;
-      color: #777;
+      color: #ccc;
     }
 
     .footer-social a:hover {
-      color: #007bff;
+      color: #00aaff;
+    }
+
+    /* Responsive scaling */
+    @media (max-width: 1000px) {
+      .category-card {
+        padding: 30px 15px;
+        min-width: 150px;
+      }
+      .category-card i {
+        font-size: 28px;
+        padding: 14px;
+      }
+      .category-card h4 {
+        font-size: 16px;
+      }
+    }
+    @media (max-width: 700px) {
+      .category-grid {
+        flex-wrap: wrap;
+      }
+      .category-card {
+        max-width: 100%;
+        flex: 1 1 40%;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
+
   <header>
-    <div class="logo">Pockverse</div>
+    <div class="logo"><a href="index.html">Pockverse</a></div>
     <nav aria-label="Main Navigation">
       <a href="about.html">About Us<span>關於我們</span></a>
       <a href="services.html">Products & Services<span>產品服務</span></a>
@@ -283,15 +403,12 @@
     </nav>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <h1>Designer Marketplace</h1>
-    <p>Find and collaborate with world-class packaging and branding designers.  
-    Bring your creative ideas to life through collaboration and design excellence.</p>
+    <p>Find and collaborate with world-class packaging and branding designers. Bring your creative ideas to life through collaboration and design excellence.</p>
     <button class="cta-btn">Join as a Designer</button>
   </section>
 
-  <!-- HOW IT WORKS -->
   <section class="how-it-works">
     <h2>How It Works</h2>
     <div class="steps">
@@ -313,270 +430,106 @@
     </div>
   </section>
 
-<!-- DESIGNER CATEGORIES -->
-<section class="categories">
-  <h2>Designer Categories</h2>
-  <div class="category-grid">
-    <div class="category-card">
-      <i class="fa-solid fa-box"></i>
-      <h4>Packaging Design</h4>
-      <p>Creative structural and graphic packaging solutions for all product types.</p>
+  <section class="categories">
+    <h2>Designer Categories</h2>
+    <div class="category-grid">
+      <div class="category-card">
+        <i class="fa-solid fa-box"></i>
+        <h4>Packaging Design</h4>
+        <p>Creative structural and graphic packaging solutions for all product types.</p>
+      </div>
+      <div class="category-card">
+        <i class="fa-solid fa-pen-nib"></i>
+        <h4>Logo & Branding</h4>
+        <p>Complete brand identity design for strong market recognition.</p>
+      </div>
+      <div class="category-card">
+        <i class="fa-solid fa-cubes"></i>
+        <h4>3D Visualization</h4>
+        <p>Realistic packaging mockups and 3D renders for client presentations.</p>
+      </div>
+      <div class="category-card">
+        <i class="fa-solid fa-print"></i>
+        <h4>Print Layout</h4>
+        <p>Professional dieline setup and production-ready print layouts.</p>
+      </div>
+      <div class="category-card">
+        <i class="fa-solid fa-paintbrush"></i>
+        <h4>Illustration</h4>
+        <p>Custom illustrations and patterns for packaging, labels, and branding.</p>
+      </div>
     </div>
-    <div class="category-card">
-      <i class="fa-solid fa-pen-nib"></i>
-      <h4>Logo & Branding</h4>
-      <p>Complete brand identity design for strong market recognition.</p>
+  </section>
+
+  <section class="featured-designers">
+    <h2>Featured Designers</h2>
+    <div class="designer-grid">
+      <div class="designer-card">
+        <div class="designer-photo" style="background-image:url('https://via.placeholder.com/150');"></div>
+        <h4>Jane Liu</h4>
+        <p>Packaging & Branding</p>
+        <div class="designer-rating">
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star-half-stroke" style="color:#FFD700;"></i>
+        </div>
+        <button class="view-profile">View Profile</button>
+      </div>
+
+      <div class="designer-card">
+        <div class="designer-photo" style="background-image:url('https://via.placeholder.com/150');"></div>
+        <h4>Tom Chen</h4>
+        <p>Illustration & 3D Design</p>
+        <div class="designer-rating">
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-regular fa-star" style="color:#FFD700;"></i>
+        </div>
+        <button class="view-profile">View Profile</button>
+      </div>
+
+      <div class="designer-card">
+        <div class="designer-photo" style="background-image:url('https://via.placeholder.com/150');"></div>
+        <h4>Emily Wong</h4>
+        <p>Print Layout & Packaging</p>
+        <div class="designer-rating">
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-regular fa-star" style="color:#FFD700;"></i>
+          <i class="fa-regular fa-star" style="color:#FFD700;"></i>
+        </div>
+        <button class="view-profile">View Profile</button>
+      </div>
+
+      <div class="designer-card">
+        <div class="designer-photo" style="background-image:url('https://via.placeholder.com/150');"></div>
+        <h4>Kevin Zhang</h4>
+        <p>Logo & Branding</p>
+        <div class="designer-rating">
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+          <i class="fa-solid fa-star-half-stroke" style="color:#FFD700;"></i>
+          <i class="fa-regular fa-star" style="color:#FFD700;"></i>
+        </div>
+        <button class="view-profile">View Profile</button>
+      </div>
     </div>
-    <div class="category-card">
-      <i class="fa-solid fa-cubes"></i>
-      <h4>3D Visualization</h4>
-      <p>Realistic packaging mockups and 3D renders for client presentations.</p>
-    </div>
-    <div class="category-card">
-      <i class="fa-solid fa-print"></i>
-      <h4>Print Layout</h4>
-      <p>Professional dieline setup and production-ready print layouts.</p>
-    </div>
-    <div class="category-card">
-      <i class="fa-solid fa-paintbrush"></i>
-      <h4>Illustration</h4>
-      <p>Custom illustrations and patterns for packaging, labels, and branding.</p>
-    </div>
-  </div>
-</section>
+  </section>
 
-<style>
-.categories {
-  background-color: #eef4f8;
-  padding: 80px 20px;
-  text-align: center;
-}
-
-.categories h2 {
-  font-size: 32px;
-  margin-bottom: 50px;
-  color: #0a3d62;
-}
-
-/* Fit all cards in one row, responsive to screen width */
-.category-grid {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  gap: 20px;
-  flex-wrap: nowrap;
-  max-width: 1150px;
-  margin: 0 auto;
-  flex: 1;
-}
-
-.category-card {
-  flex: 1 1 0;
-  min-width: 180px;
-  max-width: 220px;
-  background-color: #fff;
-  border-radius: 16px;
-  padding: 40px 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
-  text-align: center;
-}
-
-.category-card:hover {
-  transform: translateY(-6px);
-}
-
-.category-card i {
-  font-size: 34px;
-  color: #007bff;
-  background: #e9f3ff;
-  padding: 18px;
-  border-radius: 50%;
-  margin-bottom: 15px;
-}
-
-.category-card h4 {
-  font-size: 18px;
-  color: #007bff;
-  margin-bottom: 8px;
-}
-
-.category-card p {
-  font-size: 14px;
-  color: #555;
-}
-
-/* Responsive scaling */
-@media (max-width: 1000px) {
-  .category-card {
-    padding: 30px 15px;
-    min-width: 150px;
-  }
-  .category-card i {
-    font-size: 28px;
-    padding: 14px;
-  }
-  .category-card h4 {
-    font-size: 16px;
-  }
-}
-@media (max-width: 700px) {
-  .category-grid {
-    flex-wrap: wrap;
-  }
-}
-</style>
-
-
-
-  <!-- CTA JOIN -->
   <section class="join-section">
     <h2>Ready to Join the Marketplace?</h2>
     <p>Start connecting and collaborating today — as a designer or as a brand.</p>
     <button class="cta-btn">Get Started</button>
   </section>
 
-<!-- FEATURED DESIGNERS -->
-<section class="featured-designers">
-  <h2>Featured Designers</h2>
-  <div class="designer-grid">
-    <div class="designer-card">
-      <div class="designer-photo" style="background-image:url('https://via.placeholder.com/150');"></div>
-      <h4>Jane Liu</h4>
-      <p>Packaging & Branding</p>
-      <div class="designer-rating">
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star-half-stroke" style="color:#FFD700;"></i>
-      </div>
-      <button class="view-profile">View Profile</button>
-    </div>
-
-    <div class="designer-card">
-      <div class="designer-photo" style="background-image:url('https://via.placeholder.com/150');"></div>
-      <h4>Tom Chen</h4>
-      <p>Illustration & 3D Design</p>
-      <div class="designer-rating">
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-regular fa-star" style="color:#FFD700;"></i>
-      </div>
-      <button class="view-profile">View Profile</button>
-    </div>
-
-    <div class="designer-card">
-      <div class="designer-photo" style="background-image:url('https://via.placeholder.com/150');"></div>
-      <h4>Emily Wong</h4>
-      <p>Print Layout & Packaging</p>
-      <div class="designer-rating">
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-regular fa-star" style="color:#FFD700;"></i>
-        <i class="fa-regular fa-star" style="color:#FFD700;"></i>
-      </div>
-      <button class="view-profile">View Profile</button>
-    </div>
-
-    <div class="designer-card">
-      <div class="designer-photo" style="background-image:url('https://via.placeholder.com/150');"></div>
-      <h4>Kevin Zhang</h4>
-      <p>Logo & Branding</p>
-      <div class="designer-rating">
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star" style="color:#FFD700;"></i>
-        <i class="fa-solid fa-star-half-stroke" style="color:#FFD700;"></i>
-        <i class="fa-regular fa-star" style="color:#FFD700;"></i>
-      </div>
-      <button class="view-profile">View Profile</button>
-    </div>
-  </div>
-</section>
-
-<style>
-.featured-designers {
-  background-color: #f7f9fc;
-  padding: 80px 20px;
-  text-align: center;
-}
-
-.featured-designers h2 {
-  font-size: 32px;
-  color: #0a3d62;
-  margin-bottom: 50px;
-}
-
-.designer-grid {
-  max-width: 1150px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 30px;
-}
-
-.designer-card {
-  background-color: #fff;
-  border-radius: 16px;
-  padding: 30px 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.designer-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-}
-
-.designer-photo {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin: 0 auto 15px;
-  background-size: cover;
-  background-position: center;
-}
-
-.designer-card h4 {
-  margin: 0 0 6px;
-  font-size: 18px;
-  color: #007bff;
-}
-
-.designer-card p {
-  margin: 0 0 12px;
-  font-size: 14px;
-  color: #555;
-}
-
-.designer-rating i {
-  margin: 0 1px;
-}
-
-.view-profile {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 25px;
-  padding: 8px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.view-profile:hover {
-  background-color: #005fcc;
-}
-</style>
-
-
-  <!-- FOOTER -->
   <footer>
-    <div>© 2025 Pockverse</div>
+    <div>© 2026 Pockverse. All rights reserved.</div>
     <div class="footer-social">
       <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
       <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
