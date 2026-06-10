@@ -7,107 +7,84 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { margin:0; font-family:'Roboto', sans-serif; background-color:#f5f6fa; color:#1a1a1a; }
+    body { margin:0; font-family:'Roboto', sans-serif; background-color:#f5f6fa; color:#1a1a1a; overflow-x: hidden; }
     a { text-decoration:none; color:inherit; }
 
     /* Header */
-    header { display:flex; justify-content:space-between; align-items:center; padding:20px 50px; background-color:#0b2545; color:#fff; position:sticky; top:0; z-index:1000; }
+    header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background-color:#0b2545; color:#fff; position:sticky; top:0; z-index:1000; }
     .logo { font-size:28px; font-weight:700; color:#00aaff; }
-    .logo a { color:#00aaff; text-decoration:none; }
     nav { display:flex; gap:25px; }
-    nav a { display:flex; flex-direction:column; align-items:center; font-weight:500; color:#fff; font-size:16px; position:relative; padding:5px 0; transition: all 0.2s; }
-    nav a span { font-size:12px; color:#ccc; margin-top:2px; }
-    nav a.active::after, nav a:hover::after { content:""; position:absolute; bottom:0; left:0; width:100%; height:2px; background:#00aaff; }
+    nav a { font-size:16px; font-weight:500; color:#fff; display:flex; flex-direction:column; text-align:center; }
+    nav a span { font-size:12px; color:#ccc; }
 
     /* Main Layout */
-    .main-container { display:flex; gap:20px; padding:30px 40px; }
+    .main-container { display:flex; gap:20px; padding:30px 40px; box-sizing: border-box; }
 
     /* Toolbar */
     .toolbar { width:60px; display:flex; flex-direction:column; gap:20px; align-items:center; }
     .toolbar button { width:50px; height:50px; background:#0b2545; border:none; border-radius:10px; color:#fff; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.2s; }
     .toolbar button:hover { background:#005f99; }
 
-    /* Viewers Container */
-    .viewers { flex:2; display:flex; flex-direction:column; gap:20px; width: 100%; }
+    /* Viewers */
+    .viewers { flex:2; display:flex; flex-direction:column; gap:20px; align-items:center; min-width: 0; }
     
-    /* Dynamic Interactive 3D Viewer Wrapper */
+    /* 3D Viewport Engine Structural Rules */
     .viewer-3d { 
       width:100%; 
       height:500px; 
       background-color:#e0f7ff; 
       border-radius:12px; 
       display:flex; 
-      flex-direction: column;
       align-items:center; 
       justify-content:center; 
       position: relative;
       overflow: hidden;
-      box-sizing: border-box;
+      cursor: grab;
+      user-select: none;
     }
-
-    /* 3D Scene setup */
-    .scene-3d {
-      width: 200px;
-      height: 200px;
-      perspective: 1000px;
-      perspective-origin: 50% -100px;
-      margin-bottom: 20px;
-    }
-
-    /* The box wrapper that can be manually rotated if desired (auto-rotating here) */
-    .box-3d {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateX(-20deg) rotateY(45deg);
-      transition: transform 0.1s linear;
-    }
-
-    /* Common face settings */
-    .face {
+    .viewer-3d:active { cursor: grabbing; }
+    .viewer-instruction { position: absolute; top: 15px; left: 20px; font-size: 12px; color: #0b2545; font-weight: 500; background: rgba(255,255,255,0.85); padding: 5px 10px; border-radius: 6px; pointer-events: none; }
+    
+    .scene-3d { perspective: 1400px; width: 0; height: 0; display: flex; align-items: center; justify-content: center; }
+    .viewport-transform { transform-style: preserve-3d; transform: translate(0px, 0px) scale(1); }
+    .box-orientation { transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(35deg); }
+    .box-3d-root { transform-style: preserve-3d; position: relative; }
+    
+    .node-3d {
       position: absolute;
-      background: rgba(11, 37, 69, 0.85);
-      border: 2px solid #00aaff;
-      color: #fff;
+      transform-style: preserve-3d;
+      box-sizing: border-box;
+      background: rgba(240, 247, 255, 0.94);
+      border: 1.5px solid #0b2545;
+      color: #0b2545;
+      font-size: 11px;
+      font-weight: bold;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      font-weight: bold;
-      box-sizing: border-box;
-      transition: transform 0.3s ease-out;
-      backface-visibility: initial;
     }
+    .node-3d.glue-tab { background: rgba(229, 229, 229, 0.85); border-style: dashed; color: #555; }
+    .node-3d.bottom-flap { background: rgba(224, 240, 255, 0.95); border-color: #0b2545; }
 
-    /* CSS Hierarchical folding matrices anchored to correct edges */
-    .face.bottom { width: 100px; height: 100px; left: 50px; top: 50px; background: rgba(8, 70, 163, 0.9); }
-    .face.front  { width: 100px; height: 100px; left: 50px; top: 150px; transform-origin: top center; }
-    .face.back   { width: 100px; height: 100px; left: 50px; top: -50px; transform-origin: bottom center; }
-    .face.left   { width: 100px; height: 100px; left: -50px; top: 50px; transform-origin: right center; }
-    .face.right  { width: 100px; height: 100px; left: 150px; top: 50px; transform-origin: left center; }
-    .face.top    { width: 100px; height: 100px; left: 50px; top: 250px; transform-origin: top center; }
-
-    /* Control Slider Overlays */
     .fold-control-panel {
       position: absolute;
       bottom: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 8px 20px;
       border-radius: 30px;
       display: flex;
       align-items: center;
-      gap: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      gap: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
       z-index: 10;
     }
-    .fold-control-panel label { font-weight: bold; font-size: 14px; color: #0b2545; }
-    .fold-control-panel input[type="range"] { width: 150px; cursor: pointer; }
+    .fold-control-panel label { font-weight: bold; font-size: 13px; color: #0b2545; }
+    .fold-control-panel input[type="range"] { width: 140px; cursor: pointer; }
 
-    /* 2D Template Viewer styling */
+    /* 2D Viewport Vector Rules */
     .viewer-2d { 
       width:100%; 
-      height:250px; 
+      height:240px; 
       background-color:#fff; 
       border:1px solid #ddd; 
       border-radius:12px; 
@@ -117,10 +94,11 @@
       box-sizing: border-box;
       padding: 10px;
     }
-    .dieline-svg { width: 100%; height: 100%; max-width: 400px; }
-    .dieline-face { fill: #f0f7ff; stroke: #0b2545; stroke-width: 2; transition: fill 0.2s; }
-    .dieline-face:hover, .dieline-face.highlighted { fill: #00aaff; stroke: #0b2545; cursor: pointer; }
-    .fold-line { stroke: #0b2545; stroke-width: 1.5; stroke-dasharray: 4 3; }
+    .dieline-svg { width: 100%; height: 100%; }
+    .dieline-face { fill: #f0f7ff; stroke: #0b2545; stroke-width: 1.5; transition: fill 0.2s; }
+    .dieline-face.highlighted { fill: #00aaff !important; stroke: #0b2545 !important; }
+    .dieline-face.glue { fill: #e5e5e5; stroke-dasharray: 3 3; }
+    .fold-line { stroke: #0b2545; stroke-width: 1.2; stroke-dasharray: 4 3; }
 
     /* Options & Pricing */
     .options-panel { flex:1; background:#fff; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:15px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
@@ -141,21 +119,21 @@
     .pricing-table tbody tr.highlight { background:#e6f0ff; font-weight:bold; }
 
     /* Accordion */
-    .accordion { background:#e0f0ff; border-radius:8px; cursor:pointer; padding:10px 15px; font-weight:500; border:1px solid #ccc; display:flex; justify-content:space-between; align-items:center; color:#0b5ed7; }
+    .accordion { background:#e0f0ff; border-radius:8px; cursor:pointer; padding:10px 15px; font-weight:500; border:1px solid #ccc; display:flex; justify-content:space-between; align-items:center; color:#0b5ed7; margin-bottom: 5px; }
     .accordion:hover { background:#d0e6ff; }
-    .panel { display:none; flex-direction:column; padding:10px 0 0 0; }
+    .panel { display:none; flex-direction:column; padding:10px 0; }
 
     /* Material Preview */
     .material-preview { margin-top:10px; text-align:center; }
     .material-preview img { width:80px; height:80px; border-radius:50%; border:2px solid #0b5ed7; object-fit:cover; margin-bottom:5px; display:none; }
 
     /* Chat */
-    .chat-btn { position:fixed; bottom:20px; left:20px; background:#00aaff; color:#fff; border:none; border-radius:50%; width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:28px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:1010; }
-    .chat-window { display:none; position:fixed; bottom:90px; left:20px; width:300px; height:350px; background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.3); flex-direction:column; overflow:hidden; z-index:1010; }
+    .chat-btn { position:fixed; bottom:20px; left:20px; background:#00aaff; color:#fff; border:none; border-radius:50%; width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:28px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:1001; }
+    .chat-window { display:none; position:fixed; bottom:90px; left:20px; width:300px; height:350px; background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.3); flex-direction:column; overflow:hidden; z-index:1002; }
     .chat-header { background:#0b2545; color:#fff; padding:10px; font-weight:600; }
     .chat-messages { flex:1; padding:10px; overflow-y:auto; font-size:14px; }
     .chat-input { display:flex; border-top:1px solid #ccc; }
-    .chat-input textarea { flex:1; border:none; padding:10px; resize:none; font-size:14px; }
+    .chat-input textarea { flex:1; border:none; padding:10px; resize:none; font-size:14px; margin-bottom:0; }
     .chat-input button { background:#00aaff; color:#fff; border:none; padding:0 20px; cursor:pointer; }
 
     /* Action Buttons */
@@ -173,13 +151,13 @@
 <body>
 
 <header>
-  <div class="logo"><a href="index.html">Pockverse</a></div>
-  <nav aria-label="Main Navigation">
-    <a href="about.html">About Us<span>關於我們</span></a>
-    <a href="services.html" class="active">Products & Services<span>產品服務</span></a>
-    <a href="designer-marketplace.html">Designer Marketplace<span>設計師媒合</span></a>
-    <a href="cart.html">Cart & Checkout<span>購物車 & 結帳</span></a>
-    <a href="account.html">My Account<span>會員中心</span></a>
+  <div class="logo">Pockverse</div>
+  <nav>
+    <a href="#"><span>About Us</span> 關於我們</a>
+    <a href="#"><span>Products & Services</span> 產品服務</a>
+    <a href="#"><span>Designer Marketplace</span> 設計師媒合</a>
+    <a href="#"><span>Cart & Checkout</span> 購物車 & 結帳</a>
+    <a href="#"><span>My Account</span> 會員中心</a>
   </nav>
 </header>
 
@@ -196,51 +174,27 @@
   </div>
 
   <div class="viewers">
-    <div class="viewer-3d">
+    <div class="viewer-3d" id="viewer3d">
+      <div class="viewer-instruction">
+        <i class="fas fa-mouse"></i> Left Click + Drag: Orbit | Right Click + Drag: Pan | Scroll: Zoom
+      </div>
       <div class="scene-3d">
-        <div class="box-3d" id="box3d">
-          <div class="face bottom" data-face="bottom">Bottom</div>
-          <div class="face front" data-face="front">Front</div>
-          <div class="face back" data-face="back">Back</div>
-          <div class="face left" data-face="left">Left</div>
-          <div class="face right" data-face="right">Right</div>
-          <div class="face top" data-face="top">Top</div>
+        <div class="viewport-transform" id="viewportTransform">
+          <div class="box-orientation" id="boxOrientation">
+            <div class="box-3d-root" id="box3dRoot"></div>
+          </div>
         </div>
       </div>
       
-      <div class="fold-control-panel">
-        <label for="foldSlider"><i class="fas fa-box-open"></i> Fold Control</label>
+      <div class="fold-control-panel" stop-propagation>
+        <label for="foldSlider"><i class="fas fa-box-open"></i> Fold State</label>
         <input type="range" id="foldSlider" min="0" max="90" value="45">
         <span id="angleDisplay">45°</span>
       </div>
     </div>
     
     <div class="viewer-2d">
-      <svg class="dieline-svg" viewBox="0 0 320 220">
-        <rect x="110" y="10" width="100" height="50" class="dieline-face" data-face="back" />
-        <text x="160" y="40" font-size="12" text-anchor="middle" fill="#0b2545" pointer-events="none">Back</text>
-
-        <rect x="10" y="60" width="100" height="100" class="dieline-face" data-face="left" />
-        <text x="60" y="115" font-size="12" text-anchor="middle" fill="#0b2545" pointer-events="none">Left</text>
-
-        <rect x="110" y="60" width="100" height="100" class="dieline-face" data-face="bottom" />
-        <text x="160" y="115" font-size="12" text-anchor="middle" fill="#0b2545" pointer-events="none">Bottom</text>
-
-        <rect x="210" y="60" width="100" height="100" class="dieline-face" data-face="right" />
-        <text x="260" y="115" font-size="12" text-anchor="middle" fill="#0b2545" pointer-events="none">Right</text>
-
-        <rect x="110" y="160" width="100" height="50" class="dieline-face" data-face="front" />
-        <text x="160" y="190" font-size="12" text-anchor="middle" fill="#0b2545" pointer-events="none">Front</text>
-
-        <rect x="110" y="210" width="100" height="50" class="dieline-face" data-face="top" />
-        <text x="160" y="240" font-size="12" text-anchor="middle" fill="#0b2545" pointer-events="none">Top</text>
-
-        <line x1="110" y1="60" x2="210" y2="60" class="fold-line" />
-        <line x1="110" y1="160" x2="210" y2="160" class="fold-line" />
-        <line x1="110" y1="60" x2="110" y2="160" class="fold-line" />
-        <line x1="210" y1="60" x2="210" y2="160" class="fold-line" />
-        <line x1="110" y1="210" x2="210" y2="210" class="fold-line" />
-      </svg>
+      <svg class="dieline-svg" id="dielineSvg" viewBox="0 0 700 320"></svg>
     </div>
   </div>
 
@@ -249,9 +203,9 @@
     <div class="section">
       <div class="section-title">Basic Settings</div>
       <div class="option-group">
-        <input type="number" placeholder="Length">
-        <input type="number" placeholder="Width">
-        <input type="number" placeholder="Height">
+        <input type="number" id="boxLength" value="120" placeholder="Length">
+        <input type="number" id="boxWidth" value="60" placeholder="Width">
+        <input type="number" id="boxHeight" value="162" placeholder="Height">
         <select>
           <option>mm</option>
           <option>cm</option>
@@ -259,14 +213,14 @@
         </select>
       </div>
       <div class="option-group">
-        <div class="option-button" title="Inside usable space">Inner Dimensions</div>
+        <div class="option-button active" title="Inside usable space">Inner Dimensions</div>
         <div class="option-button" title="External size of product">Outer Dimensions</div>
       </div>
       <p style="font-size:12px; color:#555;">
         • Inner Dimensions: Internal usable space inside the packaging.<br>
         • Outer Dimensions: Overall outside size including thickness.
       </p>
-      <input type="number" placeholder="Thickness (0.2 - 5 mm)">
+      <input type="number" id="materialThicknessInput" placeholder="Thickness (0.2 - 5 mm)" value="0.5">
       <small>Thickness refers to paper material thickness.</small>
     </div>
 
@@ -276,7 +230,7 @@
         <option value="">Select a material</option>
         <option value="Corrugated">Corrugated Fiberboard</option>
         <option value="White-card">White Card Paper</option>
-        <option value="White-cardboard">White Cardboard Paper</option>
+        <option value="White-cardboard" selected>White Cardboard Paper</option>
         <option value="Kraft">Kraft Paper</option>
         <option value="Coated">Coated Paper</option>
         <option value="Uncoated">Uncoated Paper</option>
@@ -291,7 +245,7 @@
     <div class="accordion">Printing Options <i class="fas fa-chevron-down"></i></div>
     <div class="panel">
       <div class="option-group">
-        <div class="option-button"><i class="fas fa-palette"></i> CMYK</div>
+        <div class="option-button active"><i class="fas fa-palette"></i> CMYK</div>
         <div class="option-button"><i class="fas fa-tint"></i> Spot Color</div>
         <div class="option-button"><i class="fas fa-palette"></i><i class="fas fa-tint"></i> CMYK + Spot</div>
         <div class="option-button"><i class="far fa-square"></i> No Color (White)</div>
@@ -352,10 +306,10 @@
 
     <div class="section">
       <div class="section-title">Quantity & Pricing</div>
-      <input type="number" placeholder="Quantity (No MOQ)">
+      <input type="number" id="orderQuantityInput" value="1000" placeholder="Quantity (No MOQ)">
       <div class="pricing-summary">
-        <div>Unit Price: $<span>0.00</span></div>
-        <div>Total Price: $<span>0.00</span></div>
+        <div>Unit Price: $ <span id="summaryUnitPrice">1.10</span></div>
+        <div>Total Price: $ <span id="summaryTotalPrice">1100.00</span></div>
       </div>
       <table class="pricing-table">
         <thead>
@@ -366,9 +320,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>100</td><td>$1.50</td><td>$150</td></tr>
-          <tr><td>500</td><td>$1.30</td><td>$650</td></tr>
-          <tr class="highlight"><td>1000</td><td>$1.10</td><td>$1100</td></tr>
+          <tr id="tier-row-100"><td>100</td><td>$1.50</td><td>$150</td></tr>
+          <tr id="tier-row-500"><td>500</td><td>$1.30</td><td>$650</td></tr>
+          <tr id="tier-row-1000" class="highlight"><td>1000</td><td>$1.10</td><td>$1100</td></tr>
         </tbody>
       </table>
     </div>
@@ -382,7 +336,7 @@
       <div class="primary-actions">
         <button class="action-btn">Hire a Designer</button>
         <button class="action-btn">Upload Your Design</button>
-        <button class="action-btn">Download Template</button>
+        <button class="action-btn" id="downloadTemplateBtn">Download Template</button>
       </div>
       <div class="secondary-actions">
         <button class="action-btn">Save Project</button>
@@ -402,16 +356,16 @@
   </div>
   <div class="chat-input">
     <textarea placeholder="Type your message..."></textarea>
-    <button>Send</button>
+    <button id="chatSendBtn">Send</button>
   </div>
 </div>
 
 <footer>
-  © 2026 Pockverse. All rights reserved.
+  © 2025 Pockverse. All rights reserved.
 </footer>
 
 <script>
-  // Accordion toggle
+  /* --- Original Accordion & Chat Window Controller Toggle --- */
   document.querySelectorAll(".accordion").forEach(acc => {
     acc.addEventListener("click", function() {
       this.classList.toggle("active");
@@ -420,14 +374,12 @@
     });
   });
 
-  // Chat toggle
   const chatBtn = document.querySelector(".chat-btn");
   const chatWindow = document.querySelector(".chat-window");
   chatBtn.addEventListener("click", () => {
     chatWindow.style.display = chatWindow.style.display === "flex" ? "none" : "flex";
   });
 
-  // Material preview logic
   const materials = {
     "Corrugated": { img:"https://via.placeholder.com/80?text=Corrugated", desc:"Strong and durable, perfect for shipping boxes." },
     "White-card": { img:"https://via.placeholder.com/80?text=White+Card", desc:"Smooth surface, ideal for printing and packaging." },
@@ -454,72 +406,272 @@
     }
   });
 
-  /* --- 3D / 2D Interactive Packaging Logic --- */
+
+  /* --- 3D Camera Controls Engine --- */
+  const viewer3d = document.getElementById('viewer3d');
+  const boxOrientation = document.getElementById('boxOrientation');
+  const viewportTransform = document.getElementById('viewportTransform');
+
+  let isRotateDragging = false;
+  let isPanDragging = false;
+  let previousMousePosition = { x: 0, y: 0 };
+  
+  let currentRotation = { x: -20, y: 35 };
+  let currentPan = { x: 0, y: 0 };
+  let currentZoom = 0.92;
+
+  viewer3d.addEventListener('contextmenu', e => e.preventDefault());
+
+  viewer3d.addEventListener('mousedown', (e) => {
+    if (e.target.closest('[stop-propagation]')) return;
+    previousMousePosition = { x: e.clientX, y: e.clientY };
+    if (e.button === 0) isRotateDragging = true;
+    else if (e.button === 2) isPanDragging = true;
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    const deltaMove = { x: e.clientX - previousMousePosition.x, y: e.clientY - previousMousePosition.y };
+    previousMousePosition = { x: e.clientX, y: e.clientY };
+
+    if (isRotateDragging) {
+      currentRotation.y += deltaMove.x * 0.4;
+      currentRotation.x -= deltaMove.y * 0.4;
+      currentRotation.x = Math.max(-85, Math.min(85, currentRotation.x));
+      boxOrientation.style.transform = `rotateX(${currentRotation.x}deg) rotateY(${currentRotation.y}deg)`;
+    } else if (isPanDragging) {
+      currentPan.x += deltaMove.x;
+      currentPan.y += deltaMove.y;
+      viewportTransform.style.transform = `translate(${currentPan.x}px, ${currentPan.y}px) scale(${currentZoom})`;
+    }
+  });
+
+  window.addEventListener('mouseup', () => { isRotateDragging = false; isPanDragging = false; });
+  
+  viewer3d.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    currentZoom = Math.max(0.2, Math.min(3.0, currentZoom * (e.deltaY < 0 ? 1.05 : 0.95)));
+    viewportTransform.style.transform = `translate(${currentPan.x}px, ${currentPan.y}px) scale(${currentZoom})`;
+  }, { passive: false });
+
+
+  /* --- Synchronized Dieline Rendering Matrix Logic --- */
   const slider = document.getElementById('foldSlider');
   const angleDisplay = document.getElementById('angleDisplay');
-  const box = document.getElementById('box3d');
-  
-  const faceFront = document.querySelector('.face.front');
-  const faceBack = document.querySelector('.face.back');
-  const faceLeft = document.querySelector('.face.left');
-  const faceRight = document.querySelector('.face.right');
-  const faceTop = document.querySelector('.face.top');
+  const inputL = document.getElementById('boxLength');
+  const inputW = document.getElementById('boxWidth');
+  const inputH = document.getElementById('boxHeight');
+  const box3dRoot = document.getElementById('box3dRoot');
+  const dielineSvg = document.getElementById('dielineSvg');
+  const orderQuantityInput = document.getElementById('orderQuantityInput');
+  const summaryUnitPrice = document.getElementById('summaryUnitPrice');
+  const summaryTotalPrice = document.getElementById('summaryTotalPrice');
 
-  // Core update function matching box dimensions & fold configuration
-  function updateFolding() {
+  function renderStructuralSync() {
+    const scale = 0.75; // Balanced viewport fitting factor
+    const L = (parseFloat(inputL.value) || 120) * scale;
+    const W = (parseFloat(inputW.value) || 60) * scale;
+    const H = (parseFloat(inputH.value) || 162) * scale;
+    
     const angle = parseInt(slider.value);
     angleDisplay.textContent = angle + '°';
 
-    // Apply folding states dynamically based on standard origami matrix anchors
-    faceFront.style.transform = `rotateX(${-angle}deg)`;
-    faceBack.style.transform = `rotateX(${angle}deg)`;
-    faceLeft.style.transform = `rotateY(${angle}deg)`;
-    faceRight.style.transform = `rotateY(${-angle}deg)`;
+    const innerAngle = angle;
+    // Automatic offset tracking compensation to perfectly seal matrix accumulator
+    const snapCompensation = angle === 90 ? 0.6 : 0; 
+
+    // 1. RE-ARCHITECT 3D TRANSFORM NODE LINK SYSTEM
+    box3dRoot.innerHTML = `
+      <div class="node-3d panel-left" data-face="left" style="width:${W}px; height:${H}px; left:${-(W+L)}px; top:${-H/2}px;">
+        Left
+        
+        <div class="node-3d glue-tab" data-face="glue-tab" style="width:15px; height:${H}px; left:-15px; top:-1.5px; transform-origin: right center; transform: rotateY(${-innerAngle}deg);">
+          Glue
+        </div>
+
+        <div class="node-3d bottom-flap" data-face="b-flap-2" style="width:${W}px; height:${W}px; left:-1.5px; top:${H}px; transform-origin: center top; transform: rotateX(${-innerAngle}deg) rotateY(${innerAngle*0.5}deg);">
+          Bottom B
+        </div>
+
+        <div class="node-3d panel-rear" data-face="rear" style="width:${L}px; height:${H}px; left:${W}px; top:-1.5px; transform-origin: left center; transform: rotateY(${innerAngle}deg);">
+          Rear
+
+          <div class="node-3d panel-top" data-face="lid-main" style="width:${L}px; height:${W}px; left:-1.5px; top:${-W}px; transform-origin: center bottom; transform: rotateX(${innerAngle}deg);">
+            Top Lid
+            <div class="node-3d panel-tuck" data-face="tuck-flap" style="width:${L}px; height:20px; left:-1.5px; top:-20px; transform-origin: center bottom; transform: rotateX(${innerAngle}deg);">
+              Tuck Flap
+            </div>
+          </div>
+
+          <div class="node-3d bottom-flap" data-face="b-flap-1" style="width:${L}px; height:${W}px; left:-1.5px; top:${H}px; transform-origin: center top; transform: rotateX(${-innerAngle}deg);">
+            Bottom A
+          </div>
+
+          <div class="node-3d panel-right" data-face="right" style="width:${W}px; height:${H}px; left:${L}px; top:-1.5px; transform-origin: left center; transform: rotateY(${innerAngle}deg);">
+            Right
+
+            <div class="node-3d bottom-flap" data-face="b-flap-4" style="width:${W}px; height:${W}px; left:-1.5px; top:${H}px; transform-origin: center top; transform: rotateX(${-innerAngle}deg) rotateY(${-innerAngle*0.5}deg);">
+              Bottom D
+            </div>
+
+            <div class="node-3d panel-front" data-face="front" style="width:${L}px; height:${H}px; left:${W - snapCompensation}px; top:-1.5px; transform-origin: left center; transform: rotateY(${innerAngle}deg);">
+              Front
+
+              <div class="node-3d bottom-flap" data-face="b-flap-3" style="width:${L}px; height:${W}px; left:-1.5px; top:${H}px; transform-origin: center top; transform: rotateX(${-innerAngle}deg);">
+                Bottom C
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    `;
+
+    // 2. REDRAW 2D VECTOR TEMPLATE MAP
+    let sx = 40; 
+    let sy = W + 30; 
+
+    let xGlue = sx;
+    let xLeft = xGlue + 15;
+    let xRear = xLeft + W;
+    let xRight = xRear + L;
+    let xFront = xRight + W;
+    let xEnd = xFront + L;
+
+    let yTopLid = sy - W;
+    let yTuck = yTopLid - 20;
+    let yBase = sy;
+    let yBottom = yBase + H;
+    let yFlapMax = yBottom + W;
+
+    dielineSvg.innerHTML = `
+      <g transform="translate(15, 10)">
+        <path d="M ${xGlue} ${yBase} L ${xLeft} ${yBase} L ${xLeft} ${yBottom} L ${xGlue} ${yBottom-10} Z" class="dieline-face glue" data-face="glue-tab"/>
+        
+        <rect x="${xLeft}" y="${yBase}" width="${W}" height="${H}" class="dieline-face" data-face="left" />
+        <rect x="${xRear}" y="${yBase}" width="${L}" height="${H}" class="dieline-face" data-face="rear" />
+        <rect x="${xRight}" y="${yBase}" width="${W}" height="${H}" class="dieline-face" data-face="right" />
+        <rect x="${xFront}" y="${yBase}" width="${L}" height="${H}" class="dieline-face" data-face="front" />
+
+        <rect x="${xRear}" y="${yTopLid}" width="${L}" height="${W}" class="dieline-face" data-face="lid-main" />
+        <path d="M ${xRear} ${yTopLid} L ${xRear+10} ${yTuck} L ${xRear+L-10} ${yTuck} L ${xRear+L} ${yTopLid} Z" class="dieline-face" data-face="tuck-flap" />
+        
+        <path d="M ${xLeft} ${yBase} L ${xLeft} ${yTopLid+10} Q ${xLeft+W/2} ${yTopLid} ${xLeft+W} ${yTopLid+15} L ${xLeft+W} ${yBase} Z" fill="#f0f7ff" stroke="#0b2545"/>
+        <path d="M ${xRight} ${yBase} L ${xRight} ${yTopLid+15} Q ${xRight+W/2} ${yTopLid} ${xRight+W} ${yTopLid+10} L ${xRight+W} ${yBase} Z" fill="#f0f7ff" stroke="#0b2545"/>
+
+        <path d="M ${xLeft} ${yBottom} L ${xLeft+W} ${yBottom} L ${xLeft+W} ${yBottom+W-10} L ${xLeft+W/2} ${yBottom+W/2} L ${xLeft} ${yBottom+15} Z" class="dieline-face" data-face="b-flap-2" />
+        <path d="M ${xRear} ${yBottom} L ${xRear+L} ${yBottom} L ${xRear+L} ${yBottom+W-15} L ${xRear+L/2} ${yFlapMax} L ${xRear} ${yBottom+W-15} Z" class="dieline-face" data-face="b-flap-1" />
+        <path d="M ${xRight} ${yBottom} L ${xRight+W} ${yBottom} L ${xRight+W} ${yBottom+15} L ${xRight+W/2} ${yBottom+W/2} L ${xRight} ${yBottom+W-10} Z" class="dieline-face" data-face="b-flap-4" />
+        <path d="M ${xFront} ${yBottom} L ${xFront+L} ${yBottom} L ${xFront+L} ${yBottom+W-15} L ${xFront+L/2} ${yFlapMax} L ${xFront} ${yBottom+W-15} Z" class="dieline-face" data-face="b-flap-3" />
+
+        <line x1="${xLeft}" y1="${yBase}" x2="${xEnd}" y2="${yBase}" class="fold-line" />
+        <line x1="${xLeft}" y1="${yBottom}" x2="${xEnd}" y2="${yBottom}" class="fold-line" />
+        <line x1="${xLeft}" y1="${yBase}" x2="${xLeft}" y2="${yBottom}" class="fold-line" />
+        <line x1="${xRear}" y1="${yBase}" x2="${xRear}" y2="${yBottom}" class="fold-line" />
+        <line x1="${xRight}" y1="${yBase}" x2="${xRight}" y2="${yBottom}" class="fold-line" />
+        <line x1="${xFront}" y1="${yBase}" x2="${xFront}" y2="${yBottom}" class="fold-line" />
+        <line x1="${xEnd}" y1="${yBase}" x2="${xEnd}" y2="${yBottom}" class="fold-line" />
+        
+        <line x1="${xLeft+W}" y1="${yBottom}" x2="${xLeft+W/2}" y2="${yBottom+W/2}" class="fold-line" />
+        <line x1="${xRight}" y1="${yBottom}" x2="${xRight+W/2}" y2="${yBottom+W/2}" class="fold-line" />
+
+        <text x="${xLeft+W/2}" y="${yBase+H/2}" font-size="11" font-weight="bold" text-anchor="middle" fill="#0b2545" pointer-events="none">Left</text>
+        <text x="${xRear+L/2}" y="${yBase+H/2}" font-size="11" font-weight="bold" text-anchor="middle" fill="#0b2545" pointer-events="none">Rear</text>
+        <text x="${xRight+W/2}" y="${yBase+H/2}" font-size="11" font-weight="bold" text-anchor="middle" fill="#0b2545" pointer-events="none">Right</text>
+        <text x="${xFront+L/2}" y="${yBase+H/2}" font-size="11" font-weight="bold" text-anchor="middle" fill="#0b2545" pointer-events="none">Front</text>
+      </g>
+    `;
+
+    bindCrossHighlightEvents();
+  }
+
+  /* --- Interactive Highlight Routing Engine --- */
+  function bindCrossHighlightEvents() {
+    document.querySelectorAll('.dieline-face, .node-3d').forEach(el => {
+      el.addEventListener('mouseenter', (e) => {
+        const id = e.target.getAttribute('data-face');
+        if (!id) return;
+        
+        const svgMatch = document.querySelector(`.dieline-face[data-face="${id}"]`);
+        if (svgMatch) svgMatch.classList.add('highlighted');
+
+        const element3dMatch = document.querySelector(`.node-3d[data-face="${id}"]`);
+        if (element3dMatch) {
+          element3dMatch.style.background = '#00aaff';
+          element3dMatch.style.color = '#ffffff';
+        }
+      });
+
+      el.addEventListener('mouseleave', (e) => {
+        const id = e.target.getAttribute('data-face');
+        if (!id) return;
+
+        const svgMatch = document.querySelector(`.dieline-face[data-face="${id}"]`);
+        if (svgMatch) svgMatch.classList.remove('highlighted');
+
+        const element3dMatch = document.querySelector(`.node-3d[data-face="${id}"]`);
+        if (element3dMatch) {
+          element3dMatch.style.color = '#0b2545';
+          if (id.startsWith('b-flap')) {
+            element3dMatch.style.background = 'rgba(224, 240, 255, 0.95)';
+          } else if (id === 'glue-tab') {
+            element3dMatch.style.background = 'rgba(229, 229, 229, 0.85)';
+            element3dMatch.style.color = '#555';
+          } else {
+            element3dMatch.style.background = 'rgba(240, 247, 255, 0.94)';
+          }
+        }
+      });
+    });
+  }
+
+  /* --- Commercial Dynamic Tier Pricing Calculations --- */
+  function updateTierPricingLayout() {
+    const qty = parseInt(orderQuantityInput.value) || 0;
+    let unitPrice = 1.50;
     
-    // The top lid attaches to the front panel, so it aggregates its angle relative to it
-    faceTop.style.transform = `translateY(100px) rotateX(${-angle}deg)`;
+    document.getElementById('tier-row-100').classList.remove('highlight');
+    document.getElementById('tier-row-500').classList.remove('highlight');
+    document.getElementById('tier-row-1000').classList.remove('highlight');
+
+    if (qty >= 1000) {
+      unitPrice = 1.10;
+      document.getElementById('tier-row-1000').classList.add('highlight');
+    } else if (qty >= 500) {
+      unitPrice = 1.30;
+      document.getElementById('tier-row-500').classList.add('highlight');
+    } else {
+      unitPrice = 1.50;
+      document.getElementById('tier-row-100').classList.add('highlight');
+    }
+
+    const totalCalculated = qty * unitPrice;
+    summaryUnitPrice.textContent = unitPrice.toFixed(2);
+    summaryTotalPrice.textContent = totalCalculated.toFixed(2);
   }
 
-  // Auto slow-orbit animation loop to show off the 3D dimensions
-  let currentYRotation = 45;
-  function orbitAnimation() {
-    currentYRotation += 0.3; 
-    box.style.transform = `rotateX(-20deg) rotateY(${currentYRotation}deg)`;
-    requestAnimationFrame(orbitAnimation);
-  }
+  // Bind Calculation System Triggers
+  slider.addEventListener('input', renderStructuralSync);
+  inputL.addEventListener('input', renderStructuralSync);
+  inputW.addEventListener('input', renderStructuralSync);
+  inputH.addEventListener('input', renderStructuralSync);
+  orderQuantityInput.addEventListener('input', updateTierPricingLayout);
 
-  slider.addEventListener('input', updateFolding);
-  
-  // Cross-Highlighting Engine: 2D view and 3D view interaction
-  document.querySelectorAll('.dieline-face, .face').forEach(element => {
-    element.addEventListener('mouseenter', (e) => {
-      const faceName = e.target.getAttribute('data-face');
-      
-      // Highlight matching 2D panel
-      const svgFace = document.querySelector(`.dieline-face[data-face="${faceName}"]`);
-      if(svgFace) svgFace.classList.add('highlighted');
-
-      // Highlight matching 3D face panel
-      const boxFace = document.querySelector(`.face[data-face="${faceName}"]`);
-      if(boxFace) boxFace.style.background = '#00aaff';
-    });
-
-    element.addEventListener('mouseleave', (e) => {
-      const faceName = e.target.getAttribute('data-face');
-      
-      const svgFace = document.querySelector(`.dieline-face[data-face="${faceName}"]`);
-      if(svgFace) svgFace.classList.remove('highlighted');
-
-      const boxFace = document.querySelector(`.face[data-face="${faceName}"]`);
-      if(boxFace) {
-        boxFace.style.background = (faceName === 'bottom') ? 'rgba(8, 70, 163, 0.9)' : 'rgba(11, 37, 69, 0.85)';
-      }
-    });
+  // Template Downloader Vector Assembler
+  document.getElementById('downloadTemplateBtn').addEventListener('click', () => {
+    const svgData = dielineSvg.outerHTML;
+    const svgBlob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
+    const svgUrl = URL.createObjectURL(svgBlob);
+    const downloadLink = document.createElement("a");
+    downloadLink.href = svgUrl;
+    downloadLink.download = "pockverse_custom_box_dieline_template.svg";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   });
 
-  // Initialization
-  updateFolding();
-  orbitAnimation();
+  // Run initial calculations
+  renderStructuralSync();
+  updateTierPricingLayout();
 </script>
 
 </body>
